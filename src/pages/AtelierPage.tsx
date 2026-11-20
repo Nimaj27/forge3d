@@ -6,9 +6,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { AtelierModeSwitch } from '../components/AtelierModeSwitch';
-import type { ObjectKind, Scene, Transform, Vec3 } from '../../shared/scene';
+import type { Scene, Transform, Vec3 } from '../../shared/scene';
 import { alignObjects, applyScaleToObject, dropOnBed, freeSpot, groupObjects, mirrorObjects, ungroupObject, type AlignMode } from '../atelier/actions';
 import { AtelierViewer, type DragInfo, type GizmoTool } from '../atelier/AtelierViewer';
+import { GIZMO_TOOLS as TOOLS, SHAPES } from '../atelier/catalog';
 import { useObjectMeshes } from '../atelier/useObjectMeshes';
 import { ChecksPanel, StatusPill } from '../components/ChecksPanel';
 import { Icon, type IconName } from '../components/Icon';
@@ -24,21 +25,6 @@ import { duplicateObjects, findObject, flattenObjects } from '../scene/ops';
 import { useHistory, useSceneStore, useSelectedObject } from '../store/sceneStore';
 import { usePrinter } from '../store/settingsStore';
 import { UndoRedo } from './EditeurPage';
-
-const SHAPES: { kind: Exclude<ObjectKind, 'group' | 'sketch' | 'image' | 'svg'>; label: string; icon: IconName; width: number }[] = [
-  { kind: 'box', label: 'Cube', icon: 'box', width: 20 },
-  { kind: 'cylinder', label: 'Cylindre', icon: 'cylinder', width: 20 },
-  { kind: 'sphere', label: 'Sphère', icon: 'sphere', width: 20 },
-  { kind: 'cone', label: 'Cône', icon: 'cone', width: 20 },
-  { kind: 'tube', label: 'Tube', icon: 'tube', width: 20 },
-  { kind: 'text', label: 'Texte', icon: 'text', width: 40 },
-];
-
-const TOOLS: { value: GizmoTool; label: string; icon: IconName }[] = [
-  { value: 'translate', label: 'Déplacer', icon: 'move' },
-  { value: 'rotate', label: 'Tourner', icon: 'rotate' },
-  { value: 'scale', label: 'Redimensionner', icon: 'scale' },
-];
 
 export function AtelierPage() {
   const isDesktop = useIsDesktop();

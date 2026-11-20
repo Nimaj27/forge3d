@@ -188,3 +188,20 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
   la CI ne déploie que Hosting et les règles Firestore, compatibles avec le forfait gratuit ;
   la Cloud Function d'IA (qui exige Blaze) sera déployée quand la clé sera ajoutée. Le README
   sépare les rôles du compte de service « de base » et « mode IA ».
+
+## 2026-11-20 — Mode d'emploi (1.1.0)
+
+- **Fichier généré** `MODE_EMPLOI.md` à la racine (lisible directement sur GitHub) : texte rédigé
+  dans `docs/mode-emploi/*.md` (un fichier par section, ordre alphabétique) et marqueurs
+  `<!-- auto:… -->` remplacés par des listes tirées du code : modèles et chacun de leurs réglages
+  (défaut, plage), imprimantes, polices, formes, outils, raccourcis, version et nouveautés du
+  CHANGELOG. Un ajout dans le code met donc le mode d'emploi à jour sans réécriture.
+- **Garde-fou** : `toMatchFileSnapshot` de Vitest compare le fichier généré à `MODE_EMPLOI.md` ;
+  la CI échoue s'il n'a pas été régénéré (`npm run guide`). Le test exige aussi une section rédigée
+  par écran du menu et vérifie les liens internes.
+- **Raccourcis clavier** : la logique est passée d'une suite de `if` à une liste `SHORTCUTS`
+  (touches, action, écran) utilisée à la fois par le clavier et par le mode d'emploi.
+- Les listes de formes, d'outils et d'écrans ont été sorties des composants (`src/atelier/catalog.ts`,
+  `src/sketch/tools.ts`, `src/components/navItems.ts`) pour être lisibles hors du navigateur.
+- Pas de régénération automatique par un commit de la CI : un commit de robot sur `main` ajouterait
+  des droits d'écriture et des conflits possibles ; le test suffit à garantir la cohérence.

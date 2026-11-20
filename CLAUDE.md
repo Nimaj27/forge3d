@@ -22,6 +22,7 @@ Brief complet et maquettes validées : `docs/brief/` (référence visuelle : `do
 | `npm test` | Vitest (géométrie, modèles, formats) |
 | `npm run build` | typecheck + build de production dans `dist/` |
 | `npm run e2e` | Playwright (smoke tests, nécessite `npm run build`) |
+| `npm run guide` | régénère `MODE_EMPLOI.md` (texte de `docs/mode-emploi/` + listes tirées du code) |
 | `npm run icons` | régénère les icônes PWA depuis le logo |
 | `python3 -I scripts/build_fonts.py` | régénère les TTF de `public/fonts` (fonttools) |
 | `npm --prefix functions run build` | build de la Cloud Function d'IA (esbuild) |
@@ -44,6 +45,8 @@ src/ai/                Conversation avec l'IA (appel de la Cloud Function)
 src/projects/          Projets : IndexedDB, Firestore, fichiers .forge3d.json
 functions/             Cloud Function `generateScene` (IA, europe-west1, Node 22)
 e2e/                   Tests Playwright (parcours + accessibilité axe)
+src/guide/             Générateur du mode d'emploi (MODE_EMPLOI.md) et son test
+docs/mode-emploi/      Texte rédigé du mode d'emploi, une section par fichier
 public/fonts/          Polices TTF embarquées pour le texte 3D (OFL / Apache 2.0)
 ```
 
@@ -57,6 +60,11 @@ Règles clés :
   texte épaissi de +0,06 mm.
 - Thème : variables CSS dans `src/styles/tokens.css` ; cibles tactiles ≥ 44 px ; icônes SVG au trait.
 - Chaque jalon : tests au vert, entrée dans `CHANGELOG.md`, décisions dans `DECISIONS.md`.
+- **Mode d'emploi** : à chaque ajout visible par l'utilisateur, compléter la section concernée de
+  `docs/mode-emploi/` (nouvel écran : nouveau fichier avec `<!-- ecran: /route -->`), puis
+  `npm run guide`. Les listes (modèles, réglages, imprimantes, polices, formes, outils, raccourcis,
+  nouveautés) se mettent à jour seules depuis le code et le CHANGELOG ; un test échoue si
+  `MODE_EMPLOI.md` n'est pas régénéré. Ne jamais modifier `MODE_EMPLOI.md` à la main.
 
 ## Secrets
 

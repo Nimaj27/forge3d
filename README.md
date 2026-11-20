@@ -15,6 +15,8 @@ directement dans le navigateur : https://forge3d.web.app
 
 Toutes les mesures sont en millimètres. L'interface est en français.
 
+📘 **Mode d'emploi complet : [MODE_EMPLOI.md](MODE_EMPLOI.md)** (mis à jour à chaque version).
+
 ---
 
 ## Mise en ligne sans rien installer
@@ -162,6 +164,9 @@ npm run build
 ```bash
 npm run e2e
 ```
+
+`npm run guide` régénère le mode d'emploi après une modification de `docs/mode-emploi/`, d'un
+modèle, d'un réglage ou d'un raccourci.
 
 Voir `CLAUDE.md` pour l'architecture et les conventions, `DECISIONS.md` pour les choix techniques
 et `CHANGELOG.md` pour l'historique des versions.

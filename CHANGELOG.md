@@ -7,6 +7,20 @@ et le projet respecte le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Non publié]
 
+## [1.1.0] — 2026-11-20
+
+### Ajouté
+
+- **Mode d’emploi** (`MODE_EMPLOI.md`) : prise en main, chaque écran, couleurs et pauses, impression,
+  raccourcis clavier, installation hors ligne et réglages détaillés de chaque modèle. Il se met à
+  jour avec l’application : les listes (modèles, réglages, imprimantes, formes, outils, raccourcis)
+  sont tirées du code et les nouveautés de ce journal.
+
+### Modifié
+
+- Les raccourcis clavier sont décrits dans une liste unique, utilisée par le clavier et par le mode
+  d’emploi.
+
 ## [1.0.0] — 2026-11-20
 
 Première version complète de Forge3D (jalons J0 à J7).
