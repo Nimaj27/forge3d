@@ -1,16 +1,26 @@
-import { Component, useEffect, type ErrorInfo, type ReactNode } from 'react';
+import { Component, lazy, Suspense, useEffect, type ErrorInfo, type ReactNode } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import { AppHeader } from './components/AppHeader';
 import { BottomNav } from './components/BottomNav';
 import { ModelesPage } from './pages/ModelesPage';
-import { EditeurPage } from './pages/EditeurPage';
-import { AtelierPage } from './pages/AtelierPage';
-import { CroquisPage } from './pages/CroquisPage';
-import { IAPage } from './pages/IAPage';
-import { ProjetsPage } from './pages/ProjetsPage';
 import { useAutosave } from './projects/projects';
 import { ToastZone } from './components/Toast';
 import { useSettings } from './store/settingsStore';
+
+// Pages chargées à la demande : la galerie s'affiche sans attendre le moteur 3D.
+const EditeurPage = lazy(() => import('./pages/EditeurPage').then((m) => ({ default: m.EditeurPage })));
+const AtelierPage = lazy(() => import('./pages/AtelierPage').then((m) => ({ default: m.AtelierPage })));
+const CroquisPage = lazy(() => import('./pages/CroquisPage').then((m) => ({ default: m.CroquisPage })));
+const IAPage = lazy(() => import('./pages/IAPage').then((m) => ({ default: m.IAPage })));
+const ProjetsPage = lazy(() => import('./pages/ProjetsPage').then((m) => ({ default: m.ProjetsPage })));
+
+function Loading() {
+  return (
+    <div className="page" role="status" aria-label="Chargement">
+      <span className="spinner" />
+    </div>
+  );
+}
 
 /** Applique la couleur d'accent choisie à tout le thème. */
 function useAccent() {
@@ -55,6 +65,7 @@ export function App() {
         <AppHeader />
         <main className="app-main" id="contenu">
           <ErrorBoundary>
+          <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<Navigate to="/modeles" replace />} />
             <Route path="/modeles" element={<ModelesPage />} />
@@ -65,6 +76,7 @@ export function App() {
             <Route path="/projets" element={<ProjetsPage />} />
             <Route path="*" element={<Navigate to="/modeles" replace />} />
           </Routes>
+          </Suspense>
           </ErrorBoundary>
         </main>
         <BottomNav />

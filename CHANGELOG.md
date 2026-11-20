@@ -7,6 +7,29 @@ et le projet respecte le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Non publié]
 
+## [1.0.0] — 2026-11-20
+
+Première version complète de Forge3D (jalons J0 à J7).
+
+### Ajouté
+
+- Tests de bout en bout Playwright : galerie → porte-clés → STL, trophée (pauses 7,8 / 8,2 /
+  58,2 mm), atelier (cube + trou), croquis (révolution → scène), IA non configurée, export de
+  projet ; sur ordinateur (1440 px) et téléphone (390 px), exécutés en CI.
+- Audit d'accessibilité axe (WCAG 2 A/AA) sur les 6 écrans : aucune violation grave.
+- Test de performance : chaque modèle courant se calcule en moins de 300 ms (plaque 63 ms,
+  porte-clés 25 ms, image 71 ms ; trophée complet ≈ 360 ms).
+- README final : mise en ligne sans installation, réglages, vérifications automatiques.
+
+### Modifié
+
+- Chargement à la demande des écrans : le premier affichage ne charge plus que 282 Ko de
+  JavaScript (au lieu de 1,5 Mo) ; le moteur 3D arrive avec l'éditeur.
+
+### Corrigé
+
+- Bandes de boutons défilantes du téléphone accessibles au clavier.
+
 ## [0.7.0] — 2026-11-20
 
 ### Ajouté

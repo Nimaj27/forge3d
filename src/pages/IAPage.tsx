@@ -143,7 +143,7 @@ export function IAPage() {
   );
 
   const chips = (
-    <div className="ai-chips" role="group" aria-label="Suggestions">
+    <div className="ai-chips" role="group" aria-label="Suggestions" tabIndex={0}>
       {(scene ? FOLLOW_UPS.map((label) => ({ label, prompt: label })) : STARTERS).map((c) => (
         <button key={c.label} type="button" className="chip" disabled={disabled} onClick={() => (scene ? submit(undefined, c.prompt) : setPrompt(c.prompt))}>
           {c.label}

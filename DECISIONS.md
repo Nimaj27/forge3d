@@ -173,3 +173,14 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
   export STL fonctionnent. L'installation sur un vrai téléphone Android / iOS reste à confirmer
   après le déploiement (critères d'installation remplis : manifeste, icônes 192/512 et
   « maskable », service worker).
+
+## 2026-11-20 — J7
+
+- **Playwright** sur le build de production (`vite preview`), rendu WebGL logiciel
+  (SwiftShader) pour la CI ; 2 projets : ordinateur 1440 px et téléphone 390 px. Les parcours
+  très détaillés (croquis, trophée) ne sont joués que sur ordinateur.
+- **Accessibilité** : `@axe-core/playwright`, règles WCAG 2 A/AA ; échec du test sur toute
+  violation « serious » ou « critical ».
+- **Performances** : budget de 300 ms par modèle courant mesuré moteur chaud (polices et WASM
+  déjà chargés) ; le trophée (2 pièces, 60+ éléments) a son propre budget (< 800 ms).
+- **Découpage du code** : `React.lazy` par écran ; la galerie s'affiche sans three.js.

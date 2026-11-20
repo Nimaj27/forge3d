@@ -24,7 +24,8 @@ Brief complet et maquettes validées : `docs/brief/` (référence visuelle : `do
 | `npm run e2e` | Playwright (smoke tests, nécessite `npm run build`) |
 | `npm run icons` | régénère les icônes PWA depuis le logo |
 | `python3 -I scripts/build_fonts.py` | régénère les TTF de `public/fonts` (fonttools) |
-| `npm --prefix functions run build` | build de la Cloud Function d'IA |
+| `npm --prefix functions run build` | build de la Cloud Function d'IA (esbuild) |
+| `npm --prefix functions test` | tests de la Cloud Function (client Anthropic simulé) |
 
 ## Architecture
 
@@ -36,8 +37,13 @@ src/store/             États Zustand (scène + annuler/rétablir, réglages per
 src/templates/         Modèles paramétriques : (params) => Scene
 src/pages/             Écrans : Modèles, Éditeur, Atelier, IA, Projets
 src/components/        Composants d'interface (en-tête, navigation, icônes SVG…)
-src/firebase/          Initialisation Firebase (config lue depuis /__/firebase/init.json)
-functions/             Cloud Function `generateScene` (IA, europe-west1)
+src/firebase/          Initialisation Firebase (config lue depuis /__/firebase/init.json), auth Google
+src/sketch/            Croquis 2D (modèle éditable, canevas SVG, import SVG/DXF)
+src/atelier/           Atelier Formes (affichage par objet, gizmo, grouper/aligner/miroir)
+src/ai/                Conversation avec l'IA (appel de la Cloud Function)
+src/projects/          Projets : IndexedDB, Firestore, fichiers .forge3d.json
+functions/             Cloud Function `generateScene` (IA, europe-west1, Node 22)
+e2e/                   Tests Playwright (parcours + accessibilité axe)
 public/fonts/          Polices TTF embarquées pour le texte 3D (OFL / Apache 2.0)
 ```
 

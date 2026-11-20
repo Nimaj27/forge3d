@@ -242,7 +242,7 @@ export function CroquisPage() {
           </button>
         </header>
         <div className="m-croquis__canvas">{canvas}</div>
-        <div className="shape-strip" role="group" aria-label="Outils de dessin">
+        <div className="shape-strip" role="group" aria-label="Outils de dessin" tabIndex={0}>
           <button type="button" className="shape-btn shape-btn--sm" aria-pressed={tool === 'select'} onClick={() => setTool('select')}>
             <Icon name="select" size={20} />
             Modifier
@@ -256,7 +256,7 @@ export function CroquisPage() {
         </div>
         <section className="m-croquis__panel" aria-label="Précision et options">
           <PrecisionPanel draft={draft} tool={tool} canvas={canvasRef} />
-          <div className="action-strip">
+          <div className="action-strip" role="group" aria-label="Options du croquis" tabIndex={0}>
             <button type="button" className="btn btn--sm" aria-pressed={showDims} onClick={() => setShowDims((v) => !v)}>
               <Icon name="dimension" size={16} />
               Cotes

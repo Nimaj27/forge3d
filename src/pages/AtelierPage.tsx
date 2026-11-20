@@ -343,7 +343,7 @@ function ActionButtons({ actions, compact }: { actions: AtelierActions; compact?
   const isGroup = selected?.kind === 'group';
   const none = selection.length === 0;
   return (
-    <div className={compact ? 'action-strip' : 'grid-2 action-grid'}>
+    <div className={compact ? 'action-strip' : 'grid-2 action-grid'} role="group" aria-label="Actions sur la sélection" tabIndex={compact ? 0 : undefined}>
       {isGroup ? (
         <button type="button" className="btn" onClick={actions.ungroup}>
           <Icon name="ungroup" size={16} />
@@ -482,7 +482,7 @@ function MobileAtelier({
         {badge && <span className="viewer-badge viewer-badge--accent">{badge}</span>}
         <span className="viewer-badge viewer-badge--bl">Pincer pour zoomer · 2 doigts pour tourner</span>
       </div>
-      <div className="shape-strip" role="group" aria-label="Ajouter une forme">
+      <div className="shape-strip" role="group" aria-label="Ajouter une forme" tabIndex={0}>
         {SHAPES.map((s) => (
           <button key={s.kind} type="button" className="shape-btn shape-btn--sm" onClick={() => actions.addShape(s.kind, s.width)}>
             <Icon name={s.icon} size={22} strokeWidth={1.6} />

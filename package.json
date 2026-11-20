@@ -1,7 +1,7 @@
 {
   "name": "forge3d",
   "private": true,
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "Forge3D — créer des fichiers STL imprimables en 3D, sur ordinateur et téléphone.",
   "type": "module",
   "engines": {
@@ -39,6 +39,7 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "1.63.0",
     "@types/node": "^22.10.0",

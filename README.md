@@ -95,6 +95,39 @@ Le déploiement live se fait à chaque mise à jour de la branche **`main`**.
   (suivi dans l'onglet **Actions**).
 - Pour relancer un déploiement : **Actions › CI et déploiement › Run workflow**.
 
+### 7. Vérifier
+
+- https://forge3d.web.app s'ouvre sur la galerie des modèles ; sur téléphone, le menu du
+  navigateur propose « Installer l'application » (Android) ou « Sur l'écran d'accueil » (iOS).
+- Connectez-vous dans **Mes projets** (bouton Google), puis essayez **Créer avec l'IA**.
+- En cas de souci, l'onglet **Actions** du dépôt indique l'étape en échec.
+
+---
+
+## Réglages utiles (sans installation)
+
+| Besoin | Où le changer (directement sur GitHub) |
+|---|---|
+| Modèle de Claude utilisé par l'IA | créer `functions/.env` avec `CLAUDE_MODEL=claude-sonnet-5-5` (valeur par défaut) |
+| Nombre de créations IA par jour | `functions/.env` : `DAILY_LIMIT=30` |
+| Identifiant du site Hosting | `firebase.json` → `"site": "forge3d"` |
+| Léopard officiel du trophée | remplacer `LEOPARD_SVG` dans `src/templates/leopard.ts` par le contenu de `normandie-leopard.svg` |
+
+La clé Anthropic ne se met jamais dans ces fichiers : uniquement dans le secret GitHub
+`ANTHROPIC_API_KEY` (la CI la copie dans Secret Manager).
+
+## Ce qui est vérifié automatiquement
+
+À chaque pull request et à chaque mise à jour de `main`, la CI exécute :
+
+- **ESLint** et **TypeScript** (mode strict) ;
+- **Vitest** (75 tests) : moteur géométrique, export STL relu comme un slicer, textes des
+  4 polices, croquis (vase Ø 64 × 100, paroi 2,5), les 6 modèles (STL valides sur la 5M Pro,
+  trophée 250 mm avec pauses 7,8 / 8,2 / 58,2 mm), temps de calcul (< 300 ms par modèle
+  courant), fichiers de projet ; et les tests de la Cloud Function (client simulé) ;
+- **Playwright** : parcours principaux sur ordinateur (1440 px) et téléphone (390 px) et audit
+  d'accessibilité **axe** (WCAG 2 A/AA, aucune violation grave tolérée).
+
 ---
 
 ## Développement (facultatif, avec Node 24)
@@ -113,6 +146,10 @@ npm test
 
 ```bash
 npm run build
+```
+
+```bash
+npm run e2e
 ```
 
 Voir `CLAUDE.md` pour l'architecture et les conventions, `DECISIONS.md` pour les choix techniques
