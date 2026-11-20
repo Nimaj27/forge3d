@@ -499,3 +499,13 @@
 .grid-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+
+.segmented > a,
+.segmented > button {
+  white-space: nowrap;
+}
+@media (max-width: 1600px) and (min-width: 900px) {
+  .printer-select select {
+    max-width: 230px;
+  }
+}

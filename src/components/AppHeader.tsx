@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { NavLink, Link, useLocation } from 'react-router';
+import { AtelierModeSwitch } from './AtelierModeSwitch';
 import { ExportButton } from './ExportButton';
 import { Icon, Logo, type IconName } from './Icon';
 import { PrinterSelect } from './PrinterSelect';
@@ -31,7 +32,8 @@ export function AppHeader({ actions }: { actions?: ReactNode }) {
         ))}
       </nav>
       <div className="app-header__spacer" />
-      <PrinterSelect />
+      {pathname.startsWith('/atelier') && <AtelierModeSwitch />}
+      <PrinterSelect compact={pathname.startsWith('/atelier')} />
       {actions}
       {canExport && <ExportButton />}
     </header>

@@ -15,7 +15,16 @@ const SMOOTHING = [
   { value: 12, label: 'Facettes visibles (12 segments)' },
 ];
 
-export function ObjectProperties({ object, eyebrow = 'Forme sélectionnée' }: { object: SceneObject; eyebrow?: string }) {
+export function ObjectProperties({
+  object,
+  eyebrow = 'Forme sélectionnée',
+  tiltSlider = false,
+}: {
+  object: SceneObject;
+  eyebrow?: string;
+  /** Curseur « Inclinaison » (rotation autour de X), comme dans la maquette de l'atelier */
+  tiltSlider?: boolean;
+}) {
   const patchParams = useSceneStore((s) => s.patchParams);
   const patchTransform = useSceneStore((s) => s.patchTransform);
   const updateObject = useSceneStore((s) => s.updateObject);
@@ -61,6 +70,17 @@ export function ObjectProperties({ object, eyebrow = 'Forme sélectionnée' }: {
         max={2000}
         onChange={(position) => patchTransform(object.id, { position })}
       />
+      {tiltSlider && (
+        <SliderField
+          label="Inclinaison"
+          min={-90}
+          max={90}
+          step={1}
+          value={t.rotation[0]}
+          display={degrees(t.rotation[0])}
+          onChange={(x) => patchTransform(object.id, { rotation: [x, t.rotation[1], t.rotation[2]] })}
+        />
+      )}
       <Vec3Fields
         legend="Rotation (degrés)"
         labels={['X', 'Y', 'Z']}

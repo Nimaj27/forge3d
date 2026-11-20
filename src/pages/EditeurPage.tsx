@@ -16,6 +16,7 @@ import { toast } from '../components/Toast';
 import { applyFix, useSceneView } from '../editor/useSceneView';
 import type { CheckFix } from '../geometry/types';
 import { useObjectEvaluation } from '../geometry/useEvaluation';
+import { useShortcuts } from '../editor/useShortcuts';
 import { dims, formatNumber, mm, volumeCm3 } from '../lib/format';
 import { useIsDesktop } from '../lib/useMediaQuery';
 import { createObject, uniqueName } from '../scene/factory';
@@ -41,7 +42,7 @@ export function EditeurPage() {
   const overlayEval = useObjectEvaluation(selected);
   const [params] = useSearchParams();
   useTemplateFromUrl(params.get('modele'));
-  useEditorShortcuts();
+  useShortcuts();
 
   const overlay = useMemo(() => {
     if (!selected || !overlayEval?.mesh) return null;
@@ -332,37 +333,6 @@ function ExportActions() {
       </button>
     </div>
   );
-}
-
-/** Raccourcis clavier : annuler, rétablir, supprimer, échap. */
-function useEditorShortcuts() {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (target && (target.closest('input, textarea, select, [contenteditable="true"]') || target.isContentEditable)) return;
-      const mod = e.ctrlKey || e.metaKey;
-      const temporal = useSceneStore.temporal.getState();
-      if (mod && e.key.toLowerCase() === 'z') {
-        e.preventDefault();
-        if (e.shiftKey) temporal.redo();
-        else temporal.undo();
-      } else if (mod && e.key.toLowerCase() === 'y') {
-        e.preventDefault();
-        temporal.redo();
-      } else if (e.key === 'Delete' || e.key === 'Backspace') {
-        const { selection, removeObjects, scene } = useSceneStore.getState();
-        const removable = selection.filter((id) => !findObject(scene, id)?.object.locked);
-        if (removable.length) {
-          e.preventDefault();
-          removeObjects(removable);
-        }
-      } else if (e.key === 'Escape') {
-        useSceneStore.getState().select([]);
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
 }
 
 /** Ouvre un modèle paramétrique passé dans l'URL (?modele=…). Complété au jalon J4. */

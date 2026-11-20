@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { Component, useEffect, type ErrorInfo, type ReactNode } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import { AppHeader } from './components/AppHeader';
 import { BottomNav } from './components/BottomNav';
 import { ModelesPage } from './pages/ModelesPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { EditeurPage } from './pages/EditeurPage';
+import { AtelierPage } from './pages/AtelierPage';
 import { ToastZone } from './components/Toast';
 import { useSettings } from './store/settingsStore';
 
@@ -16,6 +17,36 @@ function useAccent() {
   }, [accent]);
 }
 
+function CroquisPlaceholder() {
+  return <PlaceholderPage title="Croquis 2D" icon="sketch" text="Le dessin 2D (lignes, arcs, cotes, extrusion, révolution) arrive au prochain jalon." />;
+}
+
+/** Barrière d'erreur : un écran qui plante n'emporte pas toute l'application. */
+class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  override state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+  override componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error(error, info.componentStack);
+  }
+  override render() {
+    if (!this.state.error) return this.props.children;
+    return (
+      <div className="page" role="alert">
+        <div className="placeholder">
+          <h1 className="page__title">Un problème est survenu</h1>
+          <p>{this.state.error.message}</p>
+          <p>Votre travail est conservé : rechargez la page pour continuer.</p>
+          <button type="button" className="btn btn--primary" onClick={() => location.reload()}>
+            Recharger
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+
 export function App() {
   useAccent();
   return (
@@ -23,20 +54,13 @@ export function App() {
       <div className="app">
         <AppHeader />
         <main className="app-main" id="contenu">
+          <ErrorBoundary>
           <Routes>
             <Route path="/" element={<Navigate to="/modeles" replace />} />
             <Route path="/modeles" element={<ModelesPage />} />
             <Route path="/editeur" element={<EditeurPage />} />
-            <Route
-              path="/atelier/*"
-              element={
-                <PlaceholderPage
-                  title="Atelier"
-                  icon="compass"
-                  text="La modélisation libre (formes, trous, croquis 2D) arrive bientôt."
-                />
-              }
-            />
+            <Route path="/atelier" element={<AtelierPage />} />
+            <Route path="/atelier/croquis" element={<CroquisPlaceholder />} />
             <Route
               path="/ia"
               element={
@@ -59,6 +83,7 @@ export function App() {
             />
             <Route path="*" element={<Navigate to="/modeles" replace />} />
           </Routes>
+          </ErrorBoundary>
         </main>
         <BottomNav />
         <ToastZone />

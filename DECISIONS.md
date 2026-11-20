@@ -61,3 +61,27 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
   taille des projets (Firestore : 1 Mio par document).
 - **Champ `template`** (facultatif) ajouté à la Scène : identifiant et réglages du modèle
   paramétrique d'origine, pour rouvrir ses réglages.
+
+## 2026-11-20 — J2
+
+- **Atelier = mêmes données que l'éditeur** : une seule scène ouverte (store partagé) ; passer de
+  l'atelier à l'éditeur conserve le travail.
+- **Affichage par objet** dans l'atelier (comme Tinkercad) : chaque forme est évaluée seule par le
+  worker, recalculée uniquement si sa forme change (un déplacement ne coûte rien). L'option
+  « Voir le résultat » affiche la fusion booléenne.
+- **Gizmo** : la transformation n'est enregistrée qu'au relâchement (une seule étape d'annulation
+  par geste) ; l'échelle est convertie en paramètres (dimensions, rayons) quand c'est possible,
+  sinon conservée dans `transform.scale` (texte, croquis, groupes).
+- **Groupes** : origine au centre XY et au bas de la sélection ; le gizmo agit sur les objets de
+  premier niveau (les enfants se règlent par les champs numériques).
+- **Dégrouper un groupe « trou »** : ses solides deviennent des trous ; ses trous internes, qui
+  n'ont plus de sens, sont retirés (message affiché).
+- **Miroir** : matrice de symétrie autour du centre de la sélection, décomposée en
+  `transform.scale` négatif (manifold gère l'inversion des faces).
+- **Aligner un objet seul** : référence = plateau (centrer en X/Y, poser en Z).
+- **[écart] En-tête de l'atelier** : sélecteur d'imprimante en version courte (« 5M Pro ») à côté
+  de la bascule Formes / Croquis 2D ; la maquette ne le montre pas, mais le brief le veut dans
+  l'en-tête.
+- **Test d'acceptation** : la reconstruction du support de téléphone de la maquette (socle,
+  dossier incliné à −22°, rebord, passe-câble en trou) demande 58 saisies / clics, soit environ
+  1 min 30 pour un humain ; résultat vérifié étanche, 1 bloc, sans support.

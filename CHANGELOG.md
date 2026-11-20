@@ -7,6 +7,28 @@ et le projet respecte le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Non publié]
 
+## [0.3.0] — 2026-11-20
+
+### Ajouté
+
+- Atelier « Formes » : cube, cylindre, sphère, cône, tube et texte ; chaque forme est Solide ou
+  Trou (trous translucides, « retirés à l'export »).
+- Gizmo (déplacer, tourner, redimensionner) avec aimantation à la grille de 1 mm et à 15° ;
+  le redimensionnement est converti en vraies dimensions (mm) pour les formes simples.
+- Champs numériques (virgule ou point, flèches ±1, Maj ±10), curseur « Inclinaison ».
+- Grouper / dégrouper, dupliquer, aligner (sur la sélection ou sur le plateau), poser sur le
+  plateau, miroir X / Y / Z, nouvelle scène annulable.
+- Sélection au clic ou au toucher (Maj + clic pour plusieurs), badge « nom · dimensions · angle ».
+- « Voir le résultat » : aperçu de la pièce fusionnée (solides − trous).
+- Raccourcis : Ctrl+Z / Ctrl+Maj+Z, Ctrl+D, Ctrl+G / Ctrl+Maj+G, Suppr, flèches.
+- Version téléphone de l'atelier (bande de formes, outils, propriétés, barre de navigation).
+- Barrière d'erreur : un écran qui plante n'emporte plus toute l'application.
+
+### Corrigé
+
+- Le panneau de vérifications plantait sur une scène vide.
+- En-tête trop large à 1440 px dans l'atelier (sélecteur d'imprimante en version courte).
+
 ## [0.2.0] — 2026-11-20
 
 ### Ajouté

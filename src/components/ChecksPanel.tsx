@@ -37,7 +37,8 @@ export function ChecksPanel({ parts, reports, checking, onFix, extra = [], title
   const multi = parts.length > 1;
   const lines: { key: string; level: CheckLevel; message: string; detail?: string; fix?: { partId: string; fix: CheckFix } }[] = [];
 
-  for (const id of ORDER) {
+  if (parts.length === 0) lines.push({ key: 'empty', level: 'pending', message: 'Scène vide : rien à vérifier pour l’instant' });
+  for (const id of parts.length ? ORDER : []) {
     const perPart = parts.map((p) => ({ part: p, item: reports[p.id]?.checks.find((c) => c.id === id) }));
     if (perPart.some((x) => !x.item)) {
       if (reports[parts[0]?.id]?.checks.length === 1 && id !== 'manifold') continue; // pièce vide
