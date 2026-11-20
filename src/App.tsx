@@ -4,6 +4,8 @@ import { AppHeader } from './components/AppHeader';
 import { BottomNav } from './components/BottomNav';
 import { ModelesPage } from './pages/ModelesPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
+import { EditeurPage } from './pages/EditeurPage';
+import { ToastZone } from './components/Toast';
 import { useSettings } from './store/settingsStore';
 
 /** Applique la couleur d'accent choisie à tout le thème. */
@@ -24,16 +26,7 @@ export function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/modeles" replace />} />
             <Route path="/modeles" element={<ModelesPage />} />
-            <Route
-              path="/editeur"
-              element={
-                <PlaceholderPage
-                  title="Éditeur"
-                  icon="pencil"
-                  text="L’éditeur 3D arrive au prochain jalon : aperçu sur le plateau, propriétés, vérifications et export STL."
-                />
-              }
-            />
+            <Route path="/editeur" element={<EditeurPage />} />
             <Route
               path="/atelier/*"
               element={
@@ -68,6 +61,7 @@ export function App() {
           </Routes>
         </main>
         <BottomNav />
+        <ToastZone />
       </div>
     </BrowserRouter>
   );

@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 import { Icon, type IconName } from './Icon';
 
 const ITEMS: { to: string; label: string; icon: IconName }[] = [
@@ -10,6 +10,9 @@ const ITEMS: { to: string; label: string; icon: IconName }[] = [
 
 /** Barre de navigation du téléphone : 4 onglets. */
 export function BottomNav() {
+  const { pathname } = useLocation();
+  // L'éditeur a sa propre barre d'actions (annuler, exporter)
+  if (pathname.startsWith('/editeur')) return null;
   return (
     <nav aria-label="Navigation" className="bottom-nav only-mobile">
       {ITEMS.map((item) => (

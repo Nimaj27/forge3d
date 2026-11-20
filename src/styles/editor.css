@@ -1,0 +1,326 @@
+/* Éditeur, atelier : panneaux, propriétés, arbre, barre de couleurs, version téléphone. */
+
+/* ---------- Propriétés ---------- */
+.props {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.props__name {
+  width: 100%;
+  min-height: 36px;
+  padding: 2px 6px;
+  margin-left: -6px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-title);
+  font-size: 18px;
+  font-weight: 600;
+}
+.props__name--lg {
+  font-size: 20px;
+}
+.props__name:hover {
+  border-color: var(--border);
+}
+.props__name:focus {
+  border-color: var(--accent);
+  outline: none;
+  background: var(--bg);
+}
+.props__kind,
+.props__hint {
+  color: var(--text-3);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.props__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.fieldset legend {
+  padding: 0;
+  margin-bottom: 8px;
+}
+.stats {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+  margin: 0;
+  font-size: 13px;
+}
+.stats dt {
+  color: var(--text-3);
+}
+.stats dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.export-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+
+/* ---------- Arbre des pièces ---------- */
+.tree__part {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tree__part + .tree__part {
+  margin-top: 6px;
+}
+.tree__head {
+  padding: 6px 4px 6px 0;
+}
+.tree__part-btn {
+  flex: 1 1 auto;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font-weight: 600;
+  text-align: left;
+}
+.tree__part-btn:hover {
+  background: var(--active-1);
+}
+.tree__part-btn.is-active {
+  border-color: var(--border-strong);
+}
+.tree__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tree__item .tree__meta {
+  flex: 0 0 auto;
+}
+.tree__empty,
+.tree__warning {
+  margin: 4px 8px 4px 22px;
+  color: var(--text-3);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.tree__warning {
+  display: flex;
+  gap: 6px;
+  color: var(--warning);
+}
+
+/* ---------- Vérifications ---------- */
+.checks__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.check-line__detail {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-3);
+  font-size: 13px;
+}
+.check-line__fix {
+  margin-top: 8px;
+}
+
+/* ---------- Barre d'outils ---------- */
+.toolbar-pair {
+  display: flex;
+  gap: 6px;
+}
+.viewer-empty {
+  position: absolute;
+  inset: auto 0 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-3);
+  pointer-events: none;
+}
+.viewer-empty a {
+  pointer-events: auto;
+}
+
+/* ---------- Couleurs par couche ---------- */
+.colorbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 10px 14px;
+  border-radius: var(--radius-card);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+.colorbar__title {
+  font-weight: 600;
+}
+.colorbar__band {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-2);
+}
+.colorbar__swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.colorbar__swatch:hover {
+  background: var(--active-1);
+}
+.colorbar__swatch .swatch {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #0006;
+}
+.colorbar__swatch:focus-within {
+  outline: 2px solid var(--accent);
+}
+.colorbar__remove {
+  width: 32px;
+  height: 32px;
+}
+.colorbar__add {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.colorbar__pauses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+}
+.colorbar--compact {
+  padding: 12px;
+}
+
+/* ---------- Éditeur téléphone ---------- */
+.m-editor {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+}
+.m-editor .mobile-header {
+  padding-left: 6px;
+}
+.m-editor__title {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.m-editor__title .mobile-header__title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.m-editor__sub {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.m-editor__viewer {
+  position: relative;
+  height: 40vh;
+  min-height: 260px;
+  flex: 0 0 auto;
+  background: var(--viewer-bg);
+  touch-action: none;
+}
+.m-editor__views {
+  position: absolute;
+  right: 10px;
+  bottom: 24px;
+  background: #17181ce6;
+}
+.m-sheet {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: -14px;
+  padding: 8px 18px 0;
+  border-radius: 18px 18px 0 0;
+  background: var(--surface-1);
+  border-top: 1px solid var(--border);
+}
+.m-sheet__grip {
+  align-self: center;
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+.m-sheet__tabs {
+  margin-top: 10px;
+}
+.m-sheet__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 0 24px;
+}
+.m-sheet__body .input,
+.m-sheet__body .select,
+.m-sheet__body .textarea {
+  font-size: 16px; /* évite le zoom automatique d'iOS */
+}
+.m-actionbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  gap: 10px;
+  padding: 12px 18px calc(14px + env(safe-area-inset-bottom));
+  background: var(--surface-1);
+  border-top: 1px solid var(--border);
+}
+.m-actionbar__undo {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border-color: var(--border-strong);
+  background: transparent;
+}
+.m-actionbar__export {
+  flex: 1 1 auto;
+  min-height: 52px;
+  border-radius: 12px;
+  font-size: 16px;
+}

@@ -36,3 +36,28 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
   l'import DXF.
 - **Dépôt initialement vide** : la première branche poussée (`claude/…`) devient la branche par
   défaut ; la CI ne déploie en live que depuis `main` (voir README pour créer `main`).
+
+## 2026-11-20 — J1
+
+- **Orientation d'impression** : `flatOnBack` = rotation de −90° autour de X (le dos, côté +Y,
+  repose sur le plateau), puis centrage XY et pose sur z = 0. Les pauses et la coloration de
+  l'aperçu sont calculées dans cette orientation (matrice `printMatrix` transmise au shader).
+- **Pauses alignées sur les couches** : pour un rendu propre, un changement de couleur Zc doit
+  être un sommet de couche (ex. dessus du plateau à 7,6 mm → pause à 7,8 mm).
+- **Rotation** : X puis Y puis Z autour des axes fixes (convention manifold `rotate`), soit
+  l'ordre d'Euler « ZYX » de three.js. Vérifié par un test.
+- **Surplombs** : faces inclinées à plus de 45° vers le bas, en ignorant celles qui ont moins de
+  2,5 mm de vide en dessous (bas des lettres en relief, petits porte-à-faux) ; alerte au-delà de
+  60 mm². Lancer de rayons manifold (`rayCast`), échantillonné (≤ 4 000 rayons).
+- **Détails fins** : ouverture morphologique (érosion puis dilatation de 0,2 mm) de tranches
+  horizontales tous les 0,8 mm ; alerte si plus de 2 mm² disparaissent.
+- **Vue « Plateau »** : disposition des pièces côte à côte dans leur orientation d'impression ;
+  « 3/4 » et « Face » montrent l'assemblage.
+- **Gestes tactiles** : 1 doigt = déplacer la vue, 2 doigts = pincer pour zoomer et tourner
+  (brief §2 et maquette « 2 doigts pour tourner »).
+- **Export de plusieurs pièces** : un STL par pièce ; téléchargements successifs sur ordinateur,
+  archive .zip sur téléphone (les navigateurs mobiles bloquent les téléchargements multiples).
+- **Images** réduites à 512 px (PNG, fond blanc) avant d'entrer dans la scène, pour limiter la
+  taille des projets (Firestore : 1 Mio par document).
+- **Champ `template`** (facultatif) ajouté à la Scène : identifiant et réglages du modèle
+  paramétrique d'origine, pour rouvrir ses réglages.

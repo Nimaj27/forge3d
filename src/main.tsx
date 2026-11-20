@@ -6,6 +6,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/ui.css';
 import './styles/layout.css';
+import './styles/editor.css';
 import { App } from './App';
 
 const root = document.getElementById('root');

@@ -7,6 +7,28 @@ et le projet respecte le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Non publié]
 
+## [0.2.0] — 2026-11-20
+
+### Ajouté
+
+- Moteur géométrique manifold-3d (WASM) dans un Web Worker (Comlink) : le thread principal ne
+  calcule jamais de géométrie ; cache LRU par empreinte, recalcul avec anti-rebond.
+- Primitives : cube (arêtes arrondies), cylindre, sphère, cône, tube, croquis extrudé ou en
+  révolution, groupes ; fusion des solides puis soustraction des trous.
+- Éditeur : liste des pièces et éléments, aperçu 3D (Z vers le haut, plateau et volume
+  d'impression, grille 10 mm), vues 3/4, Face et Plateau (orientation d'impression), propriétés
+  de l'élément sélectionné, surbrillance de la sélection, annuler / rétablir (Ctrl+Z).
+- Vérifications avant impression, recalculées en continu : tient sur le plateau (avec
+  propositions « pivoter » ou « coucher »), maillage étanche en un seul bloc, détails < 0,4 mm,
+  surplombs > 45°, pose sur le plateau.
+- Export STL binaire, vérifié comme un slicer (fusion des sommets en float32, 0 arête
+  non-manifold, 0 triangle dégénéré, 1 bloc) ; avertissement sinon. Archive projet (.zip) avec
+  STL, `.forge3d.json` et notes de pauses.
+- Aperçu bicolore par pauses : « Pause à X mm » au plus petit sommet de couche au-dessus du
+  changement, couleurs modifiables (gris #9A9DA2 / or #D6A838 par défaut).
+- Version téléphone de l'éditeur : aperçu en haut, tiroir à onglets (Éléments, Propriétés,
+  Impression), barre Annuler / Exporter fixée en bas.
+
 ## [0.1.0] — 2026-11-20
 
 ### Ajouté

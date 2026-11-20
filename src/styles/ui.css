@@ -400,3 +400,11 @@ input[type='checkbox'] {
     transform: rotate(360deg);
   }
 }
+
+/* Les icônes ne rétrécissent jamais dans les boutons */
+.btn svg,
+.icon-btn svg,
+.chip svg,
+.pill svg {
+  flex: 0 0 auto;
+}

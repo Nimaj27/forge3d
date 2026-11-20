@@ -76,6 +76,14 @@ export const tubeParamsSchema = z.object({
 export const FONT_IDS = ['classique', 'moderne', 'sport', 'robuste'] as const;
 export type FontId = (typeof FONT_IDS)[number];
 
+/** Polices embarquées (public/fonts) : libellé affiché et fichier TTF. */
+export const FONT_INFO: Record<FontId, { label: string; file: string }> = {
+  classique: { label: 'Cinzel Black (classique)', file: 'Cinzel-Black.ttf' },
+  moderne: { label: 'Inter Bold (moderne)', file: 'Inter-Bold.ttf' },
+  sport: { label: 'Bebas Neue (sport)', file: 'BebasNeue-Regular.ttf' },
+  robuste: { label: 'Roboto Slab Bold (robuste)', file: 'RobotoSlab-Bold.ttf' },
+};
+
 export const textParamsSchema = z.object({
   /** Texte ; « \n » sépare les lignes */
   text: z.string().max(300).default('Texte'),
@@ -247,6 +255,13 @@ export const sceneSchema = z.object({
   layerHeight: z.number().min(0.04).max(1).default(0.2),
   firstLayerHeight: z.number().min(0.04).max(1).default(0.2),
   parts: z.array(partSchema).min(1).max(20),
+  /** Modèle paramétrique d'origine (permet de rouvrir ses réglages) */
+  template: z
+    .object({
+      id: z.string().max(64),
+      params: z.record(z.string(), z.unknown()),
+    })
+    .optional(),
 });
 
 export type Transform = z.output<typeof transformSchema>;
