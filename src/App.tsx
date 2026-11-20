@@ -7,6 +7,7 @@ import { PlaceholderPage } from './pages/PlaceholderPage';
 import { EditeurPage } from './pages/EditeurPage';
 import { AtelierPage } from './pages/AtelierPage';
 import { CroquisPage } from './pages/CroquisPage';
+import { IAPage } from './pages/IAPage';
 import { ToastZone } from './components/Toast';
 import { useSettings } from './store/settingsStore';
 
@@ -58,16 +59,7 @@ export function App() {
             <Route path="/editeur" element={<EditeurPage />} />
             <Route path="/atelier" element={<AtelierPage />} />
             <Route path="/atelier/croquis" element={<CroquisPage />} />
-            <Route
-              path="/ia"
-              element={
-                <PlaceholderPage
-                  title="Créer avec l’IA"
-                  icon="sparkle"
-                  text="Décris ton objet en français : cette fonction arrive bientôt."
-                />
-              }
-            />
+            <Route path="/ia" element={<IAPage />} />
             <Route
               path="/projets"
               element={

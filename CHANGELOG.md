@@ -7,6 +7,23 @@ et le projet respecte le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Non publié]
 
+## [0.6.0] — 2026-11-20
+
+### Ajouté
+
+- Mode IA « Créer avec l'IA » : description en français, photo ou croquis joint, conversation
+  itérative (« texte plus grand », « ajoute 2026 »), aperçu 3D avec vérifications et pauses,
+  « Ajuster dans l'éditeur », export STL ; version téléphone.
+- Cloud Function `generateScene` (2ᵉ génération, europe-west1, Node 22) : clé Anthropic dans
+  Secret Manager uniquement, connexion Google obligatoire, quota de 30 générations par jour et
+  par utilisateur (Firestore `usage/{uid}/days/{aaaammjj}`, écrit côté serveur, rendu en cas
+  d'échec), outil `build_scene` dont le schéma est généré depuis le schéma zod de la Scène,
+  validation zod, bornage au plateau, une nouvelle tentative avec l'erreur renvoyée à Claude.
+- Modèle configurable (`CLAUDE_MODEL`, `claude-sonnet-5-5` par défaut) avec repli automatique
+  côté serveur si le modèle refuse une demande.
+- Connexion Google (Firebase Auth) ; « Mode IA non configuré » affiché sans bloquer le reste.
+- CI : build et tests des Functions ; déploiement des Functions quand la clé est fournie.
+
 ## [0.5.0] — 2026-11-20
 
 ### Ajouté

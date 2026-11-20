@@ -134,3 +134,26 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
 - **Décodage d'image** injecté : `OffscreenCanvas` dans le worker, `sharp` dans les tests.
 - **Export** : le maillage d'impression est simplifié à 1 µm (`Manifold.simplify`) avant
   l'écriture et la vérification, pour éliminer les éclats que l'arrondi float32 rendrait dégénérés.
+
+## 2026-11-20 — J5
+
+- **[écart] `tool_choice: auto` au lieu d'un choix forcé** : sur `claude-sonnet-5-5`, un
+  `tool_choice` forcé (`any` / `tool`) renvoie une erreur 400. Le prompt système impose l'outil
+  `build_scene` ; si Claude ne l'appelle pas, la fonction le lui redemande (une fois).
+- **Sortie** : l'outil reçoit `{ summary, scene }` ; JSON Schema produit par `z.toJSONSchema`
+  depuis `shared/scene.ts` (un seul schéma pour l'appli, l'IA et la validation).
+- **Nouvelle tentative** : en cas d'échec de validation zod, la réponse complète de Claude est
+  renvoyée telle quelle (blocs de réflexion compris) suivie d'un `tool_result` en erreur listant
+  les problèmes ; au second échec, message d'erreur clair.
+- **Repli en cas de refus** : bêta `server-side-fallback-2026-07-01` avec `fallbacks: "default"` ;
+  si toute la chaîne refuse (`stop_reason: refusal`), message « Reformulez votre description ».
+- **Quota** : réservation dans une transaction Firestore avant l'appel, remboursée si la
+  génération échoue (on ne compte que les réussites, sans dépasser la limite en parallèle).
+  Jour calculé en heure de Paris. Limite configurable (`DAILY_LIMIT`, 30 par défaut).
+- **Bundle esbuild** des Functions (schéma partagé et zod inclus) ; dépendances externes :
+  firebase-admin, firebase-functions, @anthropic-ai/sdk. Runtime Node 22.
+- **La scène générée devient la scène ouverte** (annulable par Ctrl+Z dans l'éditeur), pour que
+  « Ajuster dans l'éditeur » et l'export de l'en-tête portent sur elle.
+- **Non testé de bout en bout ici** : sans clé ni projet Firebase dans l'environnement de
+  développement, l'appel réel à Claude n'a pas pu être exécuté ; la chaîne est couverte par des
+  tests avec un client simulé (réponse valide, correction après erreur, refus, image, bornage).

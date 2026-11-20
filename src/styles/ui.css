@@ -408,3 +408,7 @@ input[type='checkbox'] {
 .pill svg {
   flex: 0 0 auto;
 }
+.notice > svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}

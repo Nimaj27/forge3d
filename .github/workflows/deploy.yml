@@ -151,9 +151,11 @@ jobs:
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
           echo "PROJECT_ID=$PID" >> "$GITHUB_ENV"
 
-      - name: Dépendances des Functions
+      - name: Dépendances (racine : schéma de Scène partagé, puis Functions)
         if: hashFiles('functions/package.json') != ''
-        run: npm ci --prefix functions
+        run: |
+          npm ci
+          npm ci --prefix functions
 
       - name: Synchroniser ANTHROPIC_API_KEY vers Secret Manager
         if: hashFiles('functions/package.json') != ''
