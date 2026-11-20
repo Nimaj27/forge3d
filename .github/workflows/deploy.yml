@@ -7,6 +7,7 @@
 #   FIREBASE_SERVICE_ACCOUNT  JSON complet de la clé du compte de service
 #   FIREBASE_PROJECT_ID       identifiant du projet Firebase (ex. forge3d-12345)
 #   ANTHROPIC_API_KEY         clé de l'API Anthropic (copiée dans Secret Manager, jamais dans le navigateur)
+#   AI_ALLOWED_EMAILS         adresses Google autorisées à utiliser l'IA, séparées par des virgules
 name: CI et déploiement
 
 on:
@@ -171,9 +172,18 @@ jobs:
       - name: Déployer (Hosting, Firestore, Functions)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AI_ALLOWED_EMAILS: ${{ secrets.AI_ALLOWED_EMAILS }}
         run: |
           TARGETS="hosting,firestore"
-          if [ -f functions/package.json ] && [ -n "$ANTHROPIC_API_KEY" ]; then TARGETS="$TARGETS,functions"; fi
+          if [ -f functions/package.json ] && [ -n "$ANTHROPIC_API_KEY" ]; then
+            TARGETS="$TARGETS,functions"
+            # adresses Google autorisées à utiliser l'IA (la clé est celle du propriétaire) ;
+            # écrites dans l'environnement de la fonction, jamais dans le dépôt
+            if [ -z "$AI_ALLOWED_EMAILS" ]; then
+              echo "::warning::Secret AI_ALLOWED_EMAILS absent : l'IA sera refusée à tout le monde (ajoutez votre adresse Google)."
+            fi
+            printf '\nAI_ALLOWED_EMAILS=%s\n' "$AI_ALLOWED_EMAILS" >> functions/.env
+          fi
           echo "Cibles : $TARGETS"
           npx --yes "firebase-tools@${FIREBASE_TOOLS_VERSION}" deploy --only "$TARGETS" \
             --project "$PROJECT_ID" --non-interactive --force

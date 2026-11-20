@@ -230,6 +230,9 @@ couvercle »…) : l’IA propose un modèle 3D modifiable, que vous pouvez affi
 - **Ajuster dans l’éditeur** ouvre le résultat dans l’[éditeur](#léditeur) ; **Exporter le STL** le
   télécharge directement.
 - Chaque personne dispose de 30 créations par jour.
+- L’IA fonctionne avec la clé du propriétaire du site : elle est réservée aux comptes qu’il a
+  autorisés. Les autres visiteurs voient « IA réservée » et utilisent librement tout le reste de
+  l’application.
 
 > Si l’écran affiche « Mode IA non configuré », l’IA n’est pas encore activée sur ce site (voir le
 > [README](README.md#activer-le-mode-ia-plus-tard)). Le reste de l’application fonctionne
@@ -292,8 +295,15 @@ l’enregistrement en ligne. Les mises à jour s’installent automatiquement.
   raccourcis clavier, installation hors ligne et réglages détaillés de chaque modèle. Il se met à
   jour avec l’application : les listes (modèles, réglages, imprimantes, formes, outils, raccourcis)
   sont tirées du code et les nouveautés de ce journal.
+- **IA réservée** : l’IA, qui utilise la clé Anthropic du propriétaire du site, n’est accessible
+  qu’aux adresses Google listées dans le secret GitHub `AI_ALLOWED_EMAILS` (vérification côté
+  serveur, liste vide = IA fermée). Les autres visiteurs utilisent librement le reste de
+  l’application ; la page IA leur affiche « IA réservée » dès la connexion.
 
 **Modifié**
+
+- La page IA vérifie dès la connexion si l’IA est disponible (non configurée, réservée) au lieu
+  d’attendre une première demande.
 
 - Les raccourcis clavier sont décrits dans une liste unique, utilisée par le clavier et par le mode
   d’emploi.

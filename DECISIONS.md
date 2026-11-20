@@ -205,3 +205,18 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
   `src/sketch/tools.ts`, `src/components/navItems.ts`) pour être lisibles hors du navigateur.
 - Pas de régénération automatique par un commit de la CI : un commit de robot sur `main` ajouterait
   des droits d'écriture et des conflits possibles ; le test suffit à garantir la cohérence.
+
+## 2026-11-20 — IA réservée au propriétaire (1.1.0)
+
+- **Besoin** : l'application est publique, mais l'IA consomme la clé Anthropic du propriétaire.
+- **Liste blanche par adresse Google** (`AI_ALLOWED_EMAILS`, secret GitHub) écrite par la CI dans
+  `functions/.env` au déploiement : l'adresse n'apparaît jamais dans le dépôt. Vérification dans la
+  Cloud Function (adresse vérifiée du jeton Firebase), donc impossible à contourner depuis le
+  navigateur. **Liste vide = IA fermée à tous** (échec sûr).
+- Refus en `permission-denied` avec le détail `reason: 'ai-reserved'`, distinct d'un refus de contenu.
+- **Vérification d'accès** `{ check: true }` sur la même fonction, avant toute génération : pas
+  d'appel à Claude, pas de quota consommé ; la page IA affiche « IA réservée » ou « non configurée »
+  dès la connexion.
+- Écarté : liste stockée dans Firestore (modifiable sans redéploiement, mais une étape de plus dans
+  la console) ; obligation de connexion pour tout le site (non demandée).
+

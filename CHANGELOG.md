@@ -15,8 +15,15 @@ et le projet respecte le [versionnage sémantique](https://semver.org/lang/fr/).
   raccourcis clavier, installation hors ligne et réglages détaillés de chaque modèle. Il se met à
   jour avec l’application : les listes (modèles, réglages, imprimantes, formes, outils, raccourcis)
   sont tirées du code et les nouveautés de ce journal.
+- **IA réservée** : l’IA, qui utilise la clé Anthropic du propriétaire du site, n’est accessible
+  qu’aux adresses Google listées dans le secret GitHub `AI_ALLOWED_EMAILS` (vérification côté
+  serveur, liste vide = IA fermée). Les autres visiteurs utilisent librement le reste de
+  l’application ; la page IA leur affiche « IA réservée » dès la connexion.
 
 ### Modifié
+
+- La page IA vérifie dès la connexion si l’IA est disponible (non configurée, réservée) au lieu
+  d’attendre une première demande.
 
 - Les raccourcis clavier sont décrits dans une liste unique, utilisée par le clavier et par le mode
   d’emploi.
