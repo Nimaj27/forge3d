@@ -15,6 +15,9 @@ import type { Bounds, ExportedFile, MeshData, ObjectEvaluation, PartEvaluation, 
 /** Angle au-delà duquel une arête est rendue vive dans l'aperçu (degrés). */
 const SHARP_ANGLE = 50;
 
+/** Tolérance de nettoyage du maillage exporté (mm) : supprime les éclats microscopiques. */
+const EXPORT_TOLERANCE = 0.001;
+
 interface PartEntry {
   /** Résultat en coordonnées de modélisation */
   manifold: Manifold;
@@ -24,6 +27,8 @@ interface PartEntry {
   mesh: MeshData;
   report?: PartReport;
   reportBedKey?: string;
+  /** Maillage d'export (orientation d'impression, nettoyé), calculé à la demande */
+  exportManifold?: Manifold;
 }
 
 export interface Engine {
@@ -40,9 +45,15 @@ export function createEngine(wasm: ManifoldToplevel, builders: PrimitiveBuilders
   const primitives = new LruCache<Manifold>(150, (m) => m.delete());
   const objects = new LruCache<{ manifold: Manifold; mesh: MeshData; bounds: Bounds }>(80, (e) => e.manifold.delete());
   const parts = new LruCache<PartEntry>(12, (e) => {
+    e.exportManifold?.delete();
     if (e.printManifold !== e.manifold) e.printManifold.delete();
     e.manifold.delete();
   });
+
+  function exportMesh(entry: PartEntry) {
+    if (!entry.exportManifold) entry.exportManifold = entry.printManifold.simplify(EXPORT_TOLERANCE);
+    return entry.exportManifold.getMesh();
+  }
 
   async function primitive(obj: LeafObject, warnings: string[]): Promise<Manifold | null> {
     const key = `${obj.kind}:${hashValue(obj.params)}`;
@@ -204,7 +215,7 @@ export function createEngine(wasm: ManifoldToplevel, builders: PrimitiveBuilders
       try {
         const pb = evaluation.printBounds;
         const size: Vec3 = [pb.max[0] - pb.min[0], pb.max[1] - pb.min[1], pb.max[2] - pb.min[2]];
-        const raw = entry.printManifold.getMesh();
+        const raw = exportMesh(entry);
         const positions = raw.vertProperties;
         const indices = raw.triVerts;
         const validation = validateTriangleSoup(toTriangleSoup(positions, indices, raw.numProp));
@@ -237,7 +248,7 @@ export function createEngine(wasm: ManifoldToplevel, builders: PrimitiveBuilders
     async exportPart(part, fileName) {
       const { entry } = await partEntry(part);
       if (!entry) throw new Error(`La pièce « ${part.name} » est vide.`);
-      const raw = entry.printManifold.getMesh();
+      const raw = exportMesh(entry);
       const soup = toTriangleSoup(raw.vertProperties, raw.triVerts, raw.numProp);
       const validation = validateTriangleSoup(soup);
       return { partId: part.id, fileName, data: writeBinaryStl(soup), validation };

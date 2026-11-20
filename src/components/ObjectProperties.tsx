@@ -310,6 +310,8 @@ function KindFields({ object, set }: { object: SceneObject; set: (patch: Record<
         </>
       );
     }
+    case 'loft':
+      return <p className="props__hint">Coque continue de {object.params.sections.length} sections octogonales.</p>;
     case 'group':
       return <p className="props__hint">Groupe de {object.children.length} objet(s) : les trous du groupe percent ses solides.</p>;
   }

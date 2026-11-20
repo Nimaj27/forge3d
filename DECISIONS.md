@@ -50,7 +50,9 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
   2,5 mm de vide en dessous (bas des lettres en relief, petits porte-à-faux) ; alerte au-delà de
   60 mm². Lancer de rayons manifold (`rayCast`), échantillonné (≤ 4 000 rayons).
 - **Détails fins** : ouverture morphologique (érosion puis dilatation de 0,2 mm) de tranches
-  horizontales tous les 0,8 mm ; alerte si plus de 2 mm² disparaissent.
+  horizontales tous les 0,8 mm ; alerte si une zone fine d'un seul tenant de plus de 0,6 mm²
+  disparaît (une paroi de 0,3 × 2 mm, par exemple). Les pointes et empattements des lettres,
+  minuscules, ne déclenchent pas l'alerte : un slicer les imprime simplement un peu raccourcis.
 - **Vue « Plateau »** : disposition des pièces côte à côte dans leur orientation d'impression ;
   « 3/4 » et « Face » montrent l'assemblage.
 - **Gestes tactiles** : 1 doigt = déplacer la vue, 2 doigts = pincer pour zoomer et tourner
@@ -110,3 +112,25 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
 - **Test d'acceptation J3** : le vase (Ø 64 × 100, paroi 2,5 mm) est vérifié par un test Vitest
   (dimensions, étanchéité, 1 bloc, sans support) et par un parcours Playwright dans l'interface
   (« Résultat : Ø 64 × 100 mm, sans support », ajout à la scène, export).
+
+## 2026-11-20 — J4
+
+- **[écart] Trophée reconstruit sans la référence Python** (absente du dépôt) : cotes et
+  pauses du brief, aspect du rendu `docs/brief/maquettes/images/trophee.png`. Les deux pièces
+  sont modélisées dans la position assemblée ; le bouclier a `printOrientation: flatOnBack`.
+- **[écart] Léopard provisoire** : `src/templates/leopard.ts` contient une silhouette dessinée
+  pour Forge3D (traits ≥ 1,5 mm). Pour utiliser le SVG officiel, déposer
+  `docs/brief/assets/normandie-leopard.svg` et remplacer la constante `LEOPARD_SVG`.
+- **Type `loft`** ajouté à la Scène : le brief impose une coque unique pour le socle ; un
+  maillage d'anneaux octogonaux reliés est construit directement (`Manifold.ofMesh`).
+- **Épaisseurs du bouclier constantes** (7,6 + 2,2 mm) quelle que soit la hauteur totale : les
+  pauses restent à 7,8 mm ; seules les dimensions du contour suivent l'échelle.
+- **Corniche** : chanfrein inférieur à ~43° (largeur +12 mm sur 6,5 mm) pour éviter les supports.
+- **Couleurs** : socle or / gris / or, bouclier gris / or (`Part.colors`), modifiables.
+- **Identifiants d'objets stables** dans les modèles : la sélection survit à un changement de
+  réglage ; chaque section du formulaire est reliée à des préfixes d'identifiants.
+- **Image en relief** : le rapport hauteur / largeur de l'image est mémorisé dans les réglages à
+  l'import (la construction de la scène reste synchrone, sans décoder l'image).
+- **Décodage d'image** injecté : `OffscreenCanvas` dans le worker, `sharp` dans les tests.
+- **Export** : le maillage d'impression est simplifié à 1 µm (`Manifold.simplify`) avant
+  l'écriture et la vérification, pour éliminer les éclats que l'arrondi float32 rendrait dégénérés.

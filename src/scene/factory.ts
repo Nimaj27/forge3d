@@ -19,6 +19,7 @@ const DEFAULT_NAMES: Record<ObjectKind, string> = {
   sketch: 'Croquis',
   image: 'Image',
   svg: 'Dessin',
+  loft: 'Coque',
   group: 'Groupe',
 };
 

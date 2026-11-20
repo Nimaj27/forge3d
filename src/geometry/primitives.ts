@@ -15,6 +15,7 @@ import type {
 } from '../../shared/scene';
 import { Arena } from './cache';
 import { loopToPolygon } from './curves';
+import { buildLoft } from './loft';
 
 export type LeafObject = Exclude<SceneObject, { kind: 'group' }>;
 
@@ -47,6 +48,8 @@ export async function buildPrimitive(
       return buildTube(wasm, obj.params, warnings);
     case 'sketch':
       return buildSketch(wasm, obj.params, warnings);
+    case 'loft':
+      return buildLoft(wasm, obj.params, warnings);
     case 'text':
       if (builders.text) return builders.text(wasm, obj, warnings);
       break;
@@ -132,8 +135,10 @@ export function buildSketch(wasm: ManifoldToplevel, p: SketchParams, warnings: s
   try {
     let cs = arena.track(new CrossSection(polys as MVec2[][], 'EvenOdd'));
     // Sépare les contours qui se touchent en un point (pincements).
-    cs = arena.track(cs.offset(-0.015, 'Miter', 2)).offset(0.015, 'Miter', 2);
-    arena.track(cs);
+    cs = arena.track(cs.offset(-0.015, 'Miter', 2));
+    cs = arena.track(cs.offset(0.015, 'Miter', 2));
+    // supprime les points quasi confondus (ils deviendraient des triangles dégénérés en float32)
+    cs = arena.track(cs.simplify(0.001));
     if (cs.isEmpty()) {
       warnings.push('Croquis : surface nulle.');
       return null;

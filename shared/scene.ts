@@ -155,6 +155,19 @@ export const svgParamsSchema = z.object({
   depth: pos.default(1.5),
 });
 
+/** Section horizontale d'un loft : rectangle aux coins chanfreinés (octogone), à la hauteur z. */
+export const loftSectionSchema = z.object({
+  z: num,
+  width: pos,
+  depth: pos,
+  chamfer: nonNeg.default(0),
+});
+
+/** Coque continue reliant des sections octogonales (socles, piédestaux) : une seule surface, sans union. */
+export const loftParamsSchema = z.object({
+  sections: z.array(loftSectionSchema).min(2).max(64),
+});
+
 export const groupParamsSchema = z.object({});
 
 // ---------------------------------------------------------------------------
@@ -170,7 +183,7 @@ const baseObject = {
   hidden: z.boolean().optional(),
 };
 
-export const OBJECT_KINDS = ['box', 'cylinder', 'sphere', 'cone', 'tube', 'text', 'sketch', 'image', 'svg', 'group'] as const;
+export const OBJECT_KINDS = ['box', 'cylinder', 'sphere', 'cone', 'tube', 'text', 'sketch', 'image', 'svg', 'loft', 'group'] as const;
 export type ObjectKind = (typeof OBJECT_KINDS)[number];
 
 const boxObject = z.object({ ...baseObject, kind: z.literal('box'), params: boxParamsSchema });
@@ -182,6 +195,7 @@ const textObject = z.object({ ...baseObject, kind: z.literal('text'), params: te
 const sketchObject = z.object({ ...baseObject, kind: z.literal('sketch'), params: sketchParamsSchema });
 const imageObject = z.object({ ...baseObject, kind: z.literal('image'), params: imageParamsSchema });
 const svgObject = z.object({ ...baseObject, kind: z.literal('svg'), params: svgParamsSchema });
+const loftObject = z.object({ ...baseObject, kind: z.literal('loft'), params: loftParamsSchema });
 
 type LeafObject =
   | z.output<typeof boxObject>
@@ -192,7 +206,8 @@ type LeafObject =
   | z.output<typeof textObject>
   | z.output<typeof sketchObject>
   | z.output<typeof imageObject>
-  | z.output<typeof svgObject>;
+  | z.output<typeof svgObject>
+  | z.output<typeof loftObject>;
 
 export interface GroupObject {
   id: string;
@@ -228,6 +243,7 @@ export const sceneObjectSchema: z.ZodType<SceneObject> = z.lazy(() =>
     sketchObject,
     imageObject,
     svgObject,
+    loftObject,
     groupObject as unknown as typeof boxObject,
   ]),
 ) as unknown as z.ZodType<SceneObject>;
@@ -274,6 +290,7 @@ export type TextParams = z.output<typeof textParamsSchema>;
 export type SketchParams = z.output<typeof sketchParamsSchema>;
 export type ImageParams = z.output<typeof imageParamsSchema>;
 export type SvgParams = z.output<typeof svgParamsSchema>;
+export type LoftParams = z.output<typeof loftParamsSchema>;
 export type Segment = z.output<typeof segmentSchema>;
 export type Loop = z.output<typeof loopSchema>;
 export type Part = z.output<typeof partSchema>;
@@ -291,6 +308,7 @@ export const PARAM_SCHEMAS = {
   sketch: sketchParamsSchema,
   image: imageParamsSchema,
   svg: svgParamsSchema,
+  loft: loftParamsSchema,
   group: groupParamsSchema,
 } as const;
 
@@ -335,5 +353,6 @@ export const KIND_LABELS: Record<ObjectKind, string> = {
   sketch: 'croquis',
   image: 'image',
   svg: 'dessin SVG',
+  loft: 'coque',
   group: 'groupe',
 };

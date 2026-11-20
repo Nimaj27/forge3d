@@ -1,8 +1,8 @@
 /** Liste des pièces et de leurs éléments (panneau gauche de l'éditeur). */
-import { KIND_LABELS, type Scene } from '../../shared/scene';
+import { useState } from 'react';
+import { KIND_LABELS, type Scene, type SceneObject } from '../../shared/scene';
 import type { PartEvaluation } from '../geometry/types';
 import { formatNumber } from '../lib/format';
-import { flattenObjects } from '../scene/ops';
 import { Icon } from './Icon';
 
 interface PartTreeProps {
@@ -15,7 +15,38 @@ interface PartTreeProps {
   onRemovePart?: (partId: string) => void;
 }
 
+/** Liste à plat ; les groupes de plus de 6 éléments sont repliés par défaut. */
+function visibleObjects(list: readonly SceneObject[], expanded: Set<string>, collapsed: Set<string>, depth = 0): { object: SceneObject; depth: number; open: boolean | null }[] {
+  const out: { object: SceneObject; depth: number; open: boolean | null }[] = [];
+  for (const o of list) {
+    if (o.kind !== 'group') {
+      out.push({ object: o, depth, open: null });
+      continue;
+    }
+    const open = expanded.has(o.id) || (!collapsed.has(o.id) && o.children.length <= 6);
+    out.push({ object: o, depth, open });
+    if (open) out.push(...visibleObjects(o.children, expanded, collapsed, depth + 1));
+  }
+  return out;
+}
+
 export function PartTree({ scene, evaluations, selection, activePartId, onSelect, onActivatePart, onRemovePart }: PartTreeProps) {
+  const [expanded, setExpanded] = useState(() => new Set<string>());
+  const [collapsed, setCollapsed] = useState(() => new Set<string>());
+  const toggle = (id: string, open: boolean) => {
+    setExpanded((s) => {
+      const n = new Set(s);
+      if (open) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+    setCollapsed((s) => {
+      const n = new Set(s);
+      if (open) n.add(id);
+      else n.delete(id);
+      return n;
+    });
+  };
   return (
     <div className="tree" role="list" aria-label="Pièces et éléments">
       {scene.parts.map((part) => {
@@ -43,13 +74,23 @@ export function PartTree({ scene, evaluations, selection, activePartId, onSelect
               )}
             </div>
             {part.objects.length === 0 && <p className="tree__empty">Pièce vide : ajoutez une forme ou un texte.</p>}
-            {flattenObjects(part.objects).map(({ object, depth }) => (
+            {visibleObjects(part.objects, expanded, collapsed).map(({ object, depth, open }) => (
+              <div key={object.id} className="tree__row" style={{ paddingLeft: depth * 16 }}>
+              {open !== null && (
+                <button
+                  type="button"
+                  className="tree__toggle"
+                  aria-expanded={open}
+                  aria-label={`${open ? 'Replier' : 'Déplier'} ${object.name}`}
+                  onClick={() => toggle(object.id, open)}
+                >
+                  <Icon name={open ? 'chevronDown' : 'chevronRight'} size={14} />
+                </button>
+              )}
               <button
-                key={object.id}
                 type="button"
                 className="tree__item"
                 aria-pressed={selection.includes(object.id)}
-                style={{ paddingLeft: 22 + depth * 16 }}
                 onClick={(e) => onSelect(object.id, e.shiftKey || e.metaKey || e.ctrlKey)}
               >
                 <span className="tree__label">
@@ -60,8 +101,10 @@ export function PartTree({ scene, evaluations, selection, activePartId, onSelect
                 <span className="tree__meta">
                   {KIND_LABELS[object.kind]}
                   {object.mode === 'hole' ? ' · trou' : ''}
+                  {object.kind === 'group' && !open ? ` · ${object.children.length}` : ''}
                 </span>
               </button>
+              </div>
             ))}
             {ev?.warnings.map((w) => (
               <p key={w} className="tree__warning">

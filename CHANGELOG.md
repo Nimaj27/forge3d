@@ -7,6 +7,37 @@ et le projet respecte le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Non publié]
 
+## [0.5.0] — 2026-11-20
+
+### Ajouté
+
+- Les 6 modèles paramétriques, ouverts dans l'éditeur avec un formulaire de réglages par
+  sections (la section de l'élément sélectionné est mise en avant), modifications annulables,
+  « Détacher du modèle » pour une édition libre :
+  - **Trophée** (2 pièces, 250 mm par défaut) : socle en coque loft d'octogones (plinthe, corps
+    incliné, corniche à 43° sans support), inscription 3 lignes et filet décoratif sur la face
+    avant inclinée, mortaise 46,5 × 6,5 × 20,5 ; bouclier imprimé à plat (7,6 + 2,2 mm), écu
+    avec bordure à rivets et 2 léopards, banderole courbe « DÉFIS SPORTIFS » et pans en queue
+    d'aronde, tenon 46 × 20 × 6. Pauses : bouclier 7,8 mm, socle 8,2 et 58,2 mm.
+  - **Plaque gravée** : texte 1 à 3 lignes, logo, cadre, 2 ou 4 trous avec fraisage, bicolore.
+  - **Porte-clés** : rond, rectangle arrondi ou écusson, texte, étoile ou cœur, anneau, bordure.
+  - **Boîte à couvercle** : couvercle emboîtant ou coulissant, jeu réglable (2 pièces).
+  - **Support de téléphone** : largeur, angle, épaisseur de l'appareil, passe-câble.
+  - **Image en relief** : logo (seuil), photo en relief ou lithophane, plaque de fond.
+- Nouveau type d'objet « coque » (loft) : sections octogonales reliées en une seule surface.
+- Images en relief calculées dans le worker (logo par seuil puis extrusion ; carte de hauteur).
+- Vérification propre au trophée : « Tenon / mortaise : jeu 0,25 mm ».
+- Liste des éléments : les groupes de plus de 6 éléments sont repliés.
+
+### Corrigé
+
+- L'aperçu disparaissait quand la liste des éléments était longue (l'espace de travail suit
+  désormais la hauteur de l'écran, chaque panneau défile seul).
+- Les faces situées exactement sur un changement de couleur prenaient la couleur du dessus.
+- Triangles dégénérés après conversion en float32 : contours simplifiés à 1 µm et maillage
+  d'export nettoyé.
+- Détection des détails fins trop sensible aux pointes des lettres.
+
 ## [0.4.0] — 2026-11-20
 
 ### Ajouté

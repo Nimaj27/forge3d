@@ -562,7 +562,7 @@
 .sketch-paper {
   position: relative;
   flex: 1 1 auto;
-  min-height: 560px;
+  min-height: 360px;
   border-radius: var(--radius-card-lg);
   border: 1px solid var(--border);
   overflow: hidden;
@@ -617,4 +617,71 @@
 .shape-btn[aria-pressed='true'] {
   border-color: var(--accent);
   background: var(--accent-soft-bg);
+}
+
+/* ---------- Réglages de modèle ---------- */
+.tpl-section {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface-2);
+}
+.tpl-section summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch);
+  padding: 0 14px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+.tpl-section summary::-webkit-details-marker {
+  display: none;
+}
+.tpl-section summary::after {
+  content: '';
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--text-3);
+  border-bottom: 2px solid var(--text-3);
+  transform: rotate(45deg);
+}
+.tpl-section[open] summary::after {
+  transform: rotate(225deg);
+}
+.tpl-section__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 14px 16px;
+}
+.tpl-thumb {
+  max-width: 120px;
+  max-height: 80px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.tree__toggle {
+  width: 28px;
+  height: 28px;
+  margin-left: -24px;
+  border: none;
+  background: transparent;
+  color: var(--text-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+.tree__toggle:hover {
+  background: var(--active-2);
+}
+.tree__row {
+  display: flex;
+  align-items: center;
+}
+.tree__row .tree__item {
+  flex: 1 1 auto;
+  min-width: 0;
 }

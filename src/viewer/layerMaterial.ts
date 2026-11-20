@@ -36,7 +36,8 @@ export function createLayerMaterial(): { material: MeshStandardMaterial; uniform
         `#include <color_fragment>
   vec3 bandColor = uColors[0];
   for (int i = 0; i < ${MAX_BANDS - 1}; i++) {
-    if (i < uCount && vPrintZ >= uBreaks[i] - 0.0005) bandColor = uColors[i + 1];
+    // une face exactement sur la frontière (dessus de la plaque) garde la couleur du dessous
+    if (i < uCount && vPrintZ > uBreaks[i] + 0.01) bandColor = uColors[i + 1];
   }
   diffuseColor.rgb = bandColor;`,
       );

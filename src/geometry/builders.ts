@@ -7,10 +7,13 @@ import { Arena } from './cache';
 import type { PrimitiveBuilders } from './primitives';
 import { parseSvg } from './svgParse';
 import { buildText, FontLibrary } from './text';
+import { buildImage, type ImageDecoder } from './image';
 
 export interface BuilderDeps {
   /** Charge un fichier de police TTF (nom de fichier dans public/fonts) */
   loadFont: (file: string) => Promise<ArrayBuffer>;
+  /** Décode une image (data URL) en niveaux de gris */
+  decodeImage?: ImageDecoder;
 }
 
 export function createBuilders(deps: BuilderDeps): PrimitiveBuilders & { fonts: FontLibrary } {
@@ -19,6 +22,7 @@ export function createBuilders(deps: BuilderDeps): PrimitiveBuilders & { fonts: 
     fonts,
     text: (wasm, obj, warnings) => buildText(wasm, fonts, obj.params, warnings),
     svg: async (wasm, obj, warnings) => buildSvg(wasm, obj.params, warnings),
+    image: (wasm, obj, warnings) => buildImage(wasm, deps.decodeImage, obj.params, warnings),
   };
 }
 
@@ -39,6 +43,7 @@ export function svgCrossSection(wasm: ManifoldToplevel, src: string, width: numb
   // pincements séparés
   cs = arena.track(cs.offset(-0.015, 'Miter', 2));
   cs = arena.track(cs.offset(0.015, 'Miter', 2));
+  cs = arena.track(cs.simplify(0.001));
   return cs.isEmpty() ? null : cs;
 }
 

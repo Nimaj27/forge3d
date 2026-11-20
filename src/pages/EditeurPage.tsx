@@ -11,6 +11,8 @@ import { ExportButton, useExport, useExportLabel } from '../components/ExportBut
 import { Segmented } from '../components/fields';
 import { Icon } from '../components/Icon';
 import { ObjectProperties } from '../components/ObjectProperties';
+import { TemplateProperties } from '../components/TemplateProperties';
+import { templateChecks } from '../templates/registry';
 import { PartTree } from '../components/PartTree';
 import { toast } from '../components/Toast';
 import { applyFix, useSceneView } from '../editor/useSceneView';
@@ -127,8 +129,14 @@ export function EditeurPage() {
       </section>
 
       <aside className="panel panel--right" aria-label="Propriétés">
-        {selected ? <ObjectProperties object={selected} eyebrow="Propriétés" /> : activePart && <PartProperties part={activePart} view={view} />}
-        <ChecksPanel parts={scene.parts.filter((p) => p.objects.length)} reports={view.reports} checking={view.checking} onFix={onFix} />
+        {scene.template ? (
+          <TemplateProperties />
+        ) : selected ? (
+          <ObjectProperties object={selected} eyebrow="Propriétés" />
+        ) : (
+          activePart && <PartProperties part={activePart} view={view} />
+        )}
+        <ChecksPanel parts={scene.parts.filter((p) => p.objects.length)} reports={view.reports} checking={view.checking} onFix={onFix} extra={templateChecks(scene)} />
         <ExportActions />
       </aside>
     </div>
@@ -341,7 +349,7 @@ function useTemplateFromUrl(id: string | null) {
   useEffect(() => {
     if (!id || loaded.current === id) return;
     loaded.current = id;
-    void import('../templates/registry').then(({ loadTemplate }) => loadTemplate(id)).catch(() => undefined);
+    void import('../templates/registry').then(({ loadTemplate }) => loadTemplate(id));
   }, [id]);
 }
 
@@ -439,7 +447,14 @@ function MobileEditor({
               <AddButtons />
             </>
           )}
-          {tab === 'proprietes' && (selected ? <ObjectProperties object={selected} eyebrow="Propriétés" /> : activePart && <PartProperties part={activePart} view={view} />)}
+          {tab === 'proprietes' &&
+            (scene.template ? (
+              <TemplateProperties />
+            ) : selected ? (
+              <ObjectProperties object={selected} eyebrow="Propriétés" />
+            ) : (
+              activePart && <PartProperties part={activePart} view={view} />
+            ))}
           {tab === 'impression' && (
             <>
               {activePart && (
@@ -451,7 +466,7 @@ function MobileEditor({
                   onChange={(p) => useSceneStore.getState().updatePart(p.id, () => p)}
                 />
               )}
-              <ChecksPanel parts={scene.parts.filter((p) => p.objects.length)} reports={view.reports} checking={view.checking} onFix={onFix} />
+              <ChecksPanel parts={scene.parts.filter((p) => p.objects.length)} reports={view.reports} checking={view.checking} onFix={onFix} extra={templateChecks(scene)} />
               <ExportProjectButton />
             </>
           )}

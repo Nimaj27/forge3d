@@ -13,8 +13,8 @@ export const OVERHANG_COS = Math.cos((45 * Math.PI) / 180); // surplomb > 45° p
 const OVERHANG_MIN_CLEARANCE = 2.5; // mm : en dessous, le slicer fait un pont / petit porte-à-faux
 const OVERHANG_MIN_AREA = 60; // mm²
 const THIN_HALF_WIDTH = 0.2; // érosion de 0,2 mm → détails < 0,4 mm
-const THIN_MIN_LOST_AREA = 2; // mm²
-const THIN_MIN_LOST_RATIO = 0.005;
+/** Une zone fine d'un seul tenant au-delà de cette aire est signalée (les pointes de lettres, plus petites, sont ignorées). */
+const THIN_MIN_FEATURE_AREA = 0.6; // mm²
 
 /** Contrôle « tient sur le plateau » avec suggestions de correction. */
 export function checkBed(size: Vec3, bed: Vec3): CheckItem {
@@ -156,8 +156,16 @@ export function findThinZ(m: Manifold, bounds: Bounds, maxSlices = 30): number[]
       if (area < 0.01) continue;
       const eroded = arena.track(cs.offset(-THIN_HALF_WIDTH, 'Round', 2, 16));
       const opened = arena.track(eroded.offset(THIN_HALF_WIDTH, 'Round', 2, 16));
-      const lost = area - opened.area();
-      if (lost > THIN_MIN_LOST_AREA && lost / area > THIN_MIN_LOST_RATIO) out.push(Math.round(z * 10) / 10);
+      if (area - opened.area() < THIN_MIN_FEATURE_AREA) continue;
+      // parties qui disparaissent, une par une : seules les zones fines étendues comptent
+      const lost = arena.track(cs.subtract(opened));
+      const pieces = lost.decompose();
+      let significant = false;
+      for (const piece of pieces) {
+        if (piece.area() > THIN_MIN_FEATURE_AREA) significant = true;
+        piece.delete();
+      }
+      if (significant) out.push(Math.round(z * 10) / 10);
     }
   } finally {
     arena.dispose();

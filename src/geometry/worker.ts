@@ -22,6 +22,24 @@ const enginePromise = (async () => {
         if (!res.ok) throw new Error(`Police introuvable : ${file}`);
         return res.arrayBuffer();
       },
+      decodeImage: async (src, maxSize) => {
+        const blob = await (await fetch(src)).blob();
+        const bitmap = await createImageBitmap(blob);
+        const scale = Math.min(1, maxSize / Math.max(bitmap.width, bitmap.height));
+        const w = Math.max(2, Math.round(bitmap.width * scale));
+        const h = Math.max(2, Math.round(bitmap.height * scale));
+        const canvas = new OffscreenCanvas(w, h);
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Canvas indisponible');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(bitmap, 0, 0, w, h);
+        bitmap.close();
+        const rgba = ctx.getImageData(0, 0, w, h).data;
+        const data = new Uint8Array(w * h);
+        for (let i = 0; i < data.length; i++) data[i] = Math.round(0.299 * rgba[i * 4] + 0.587 * rgba[i * 4 + 1] + 0.114 * rgba[i * 4 + 2]);
+        return { width: w, height: h, data };
+      },
     }),
   );
 })();
