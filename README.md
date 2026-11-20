@@ -22,13 +22,14 @@ Toutes les mesures sont en millimètres. L'interface est en français.
 Tout se fait depuis **GitHub** et la **console Firebase**, sans Node ni Git sur votre poste.
 Comptez 20 à 30 minutes la première fois.
 
-### 1. Créer le projet Firebase et passer au forfait Blaze
+### 1. Créer le projet Firebase
 
 1. Ouvrez https://console.firebase.google.com puis **Ajouter un projet**.
    Notez l'**ID du projet** (sous le nom, par exemple `forge3d-a1b2c`).
-2. Dans le projet : **⚙ Paramètres du projet › Utilisation et facturation › Détails et forfaits**,
-   puis passez au forfait **Blaze** (paiement à l'usage, nécessaire pour les Cloud Functions du
-   mode IA). Conseil : créez une alerte de budget (par exemple 5 €) dans Google Cloud Billing.
+2. **Forfait** : le forfait gratuit **Spark** suffit pour toute l'application, sauf le mode
+   « Créer avec l'IA » (il affiche alors « Mode IA non configuré »). Le forfait **Blaze**
+   (paiement à l'usage, quotas gratuits inclus) n'est nécessaire que pour l'IA : voir
+   [Activer le mode IA plus tard](#activer-le-mode-ia-plus-tard).
 3. Toujours dans **Paramètres du projet › Général**, section **Vos applications**, cliquez sur
    l'icône **Web `</>`** et enregistrez une application nommée `Forge3D`
    (inutile de cocher Firebase Hosting ici ; ignorez le code affiché).
@@ -44,6 +45,7 @@ Comptez 20 à 30 minutes la première fois.
 ### 3. Créer le site Hosting `forge3d`
 
 1. **Créer › Hosting › Commencer** : passez les étapes d'installation (la CI s'en charge).
+   Si l'ID du projet est exactement `forge3d`, le site `forge3d` existe déjà : passez à l'étape 4.
 2. En bas de la page Hosting, **Ajouter un autre site**, puis saisissez l'identifiant `forge3d`.
    L'adresse sera **https://forge3d.web.app**.
    Si `forge3d` est déjà pris, choisissez un autre identifiant et remplacez `"site": "forge3d"`
@@ -57,11 +59,6 @@ Comptez 20 à 30 minutes la première fois.
    - Administrateur Firebase Hosting (`roles/firebasehosting.admin`)
    - Administrateur des règles Firebase (`roles/firebaserules.admin`)
    - Administrateur d'index Cloud Datastore (`roles/datastore.indexAdmin`)
-   - Administrateur Cloud Functions (`roles/cloudfunctions.admin`)
-   - Administrateur Cloud Run (`roles/run.admin`)
-   - Administrateur Artifact Registry (`roles/artifactregistry.admin`)
-   - Éditeur Cloud Build (`roles/cloudbuild.builds.editor`)
-   - Administrateur Secret Manager (`roles/secretmanager.admin`)
    - Utilisateur du compte de service (`roles/iam.serviceAccountUser`)
    - Administrateur Service Usage (`roles/serviceusage.serviceUsageAdmin`)
    - Lecteur Firebase (`roles/firebase.viewer`)
@@ -77,10 +74,10 @@ Dans le dépôt GitHub : **Settings › Secrets and variables › Actions › Ne
 |---|---|
 | `FIREBASE_SERVICE_ACCOUNT` | tout le contenu du fichier JSON de l'étape 4 |
 | `FIREBASE_PROJECT_ID` | l'ID du projet Firebase (étape 1) |
-| `ANTHROPIC_API_KEY` | votre clé API Anthropic (https://console.anthropic.com), pour le mode IA |
+| `ANTHROPIC_API_KEY` | **facultatif**, seulement avec le forfait Blaze : votre clé API Anthropic |
 
-Sans `ANTHROPIC_API_KEY`, l'application fonctionne normalement et affiche
-« Mode IA non configuré ».
+Sans `ANTHROPIC_API_KEY`, la CI ne déploie que le site et les règles Firestore (compatible
+Spark) ; l'application fonctionne normalement et affiche « Mode IA non configuré ».
 
 ### 6. Premier déploiement
 
@@ -99,8 +96,22 @@ Le déploiement live se fait à chaque mise à jour de la branche **`main`**.
 
 - https://forge3d.web.app s'ouvre sur la galerie des modèles ; sur téléphone, le menu du
   navigateur propose « Installer l'application » (Android) ou « Sur l'écran d'accueil » (iOS).
-- Connectez-vous dans **Mes projets** (bouton Google), puis essayez **Créer avec l'IA**.
+- Connectez-vous dans **Mes projets** (bouton Google) et enregistrez un projet.
 - En cas de souci, l'onglet **Actions** du dépôt indique l'étape en échec.
+
+### Activer le mode IA plus tard
+
+1. Passez au forfait **Blaze** : **⚙ Paramètres du projet › Utilisation et facturation ›
+   Détails et forfaits**. Conseil : créez une alerte de budget (par exemple 5 €) dans
+   Google Cloud Billing. Les appels à Claude sont facturés à part par Anthropic.
+2. Ajoutez ces rôles au compte de service `github-deploy` (étape 4) :
+   - Administrateur Cloud Functions (`roles/cloudfunctions.admin`)
+   - Administrateur Cloud Run (`roles/run.admin`)
+   - Administrateur Artifact Registry (`roles/artifactregistry.admin`)
+   - Éditeur Cloud Build (`roles/cloudbuild.builds.editor`)
+   - Administrateur Secret Manager (`roles/secretmanager.admin`)
+3. Ajoutez le secret GitHub `ANTHROPIC_API_KEY` (clé créée sur https://console.anthropic.com).
+4. Relancez le déploiement : **Actions › CI et déploiement › Run workflow** sur `main`.
 
 ---
 

@@ -19,7 +19,8 @@ Première version complète de Forge3D (jalons J0 à J7).
 - Audit d'accessibilité axe (WCAG 2 A/AA) sur les 6 écrans : aucune violation grave.
 - Test de performance : chaque modèle courant se calcule en moins de 300 ms (plaque 63 ms,
   porte-clés 25 ms, image 71 ms ; trophée complet ≈ 360 ms).
-- README final : mise en ligne sans installation, réglages, vérifications automatiques.
+- README final : mise en ligne sans installation, réglages, vérifications automatiques ;
+  démarrage possible avec le forfait gratuit Spark (sans IA), puis activation de l'IA en Blaze.
 
 ### Modifié
 

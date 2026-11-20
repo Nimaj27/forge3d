@@ -184,3 +184,7 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
 - **Performances** : budget de 300 ms par modèle courant mesuré moteur chaud (polices et WASM
   déjà chargés) ; le trophée (2 pièces, 60+ éléments) a son propre budget (< 800 ms).
 - **Découpage du code** : `React.lazy` par écran ; la galerie s'affiche sans three.js.
+- **Forfait Spark au lancement** (choix du propriétaire) : sans le secret `ANTHROPIC_API_KEY`,
+  la CI ne déploie que Hosting et les règles Firestore, compatibles avec le forfait gratuit ;
+  la Cloud Function d'IA (qui exige Blaze) sera déployée quand la clé sera ajoutée. Le README
+  sépare les rôles du compte de service « de base » et « mode IA ».
