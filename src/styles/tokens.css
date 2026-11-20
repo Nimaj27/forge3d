@@ -1,0 +1,58 @@
+/* Thème sombre « forge » — valeurs issues du brief §8 et des maquettes. */
+:root {
+  color-scheme: dark;
+
+  /* Fonds et surfaces */
+  --bg: #121316;
+  --surface-1: #17181c;
+  --surface-2: #1b1d21;
+  --surface-3: #1f2125;
+  --active-1: #24272d;
+  --active-2: #2a2d33;
+
+  /* Bordures */
+  --border: #2b2e34;
+  --border-strong: #3a3e46;
+
+  /* Texte */
+  --text: #edeef0;
+  --text-2: #c9cdd3;
+  --text-3: #a3a9b2;
+  --placeholder: #8a9099;
+
+  /* Accent (variable de thème, modifiable dans les réglages) */
+  --accent: #f59e3d;
+  --on-accent: #1a1206;
+  --accent-soft-bg: #2a2219;
+  --accent-soft-border: #4a3820;
+  --accent-soft-text: #d3c2ac;
+
+  /* États */
+  --success: #8fe0b0;
+  --success-bg: #1c2a22;
+  --warning: #f3c969;
+  --warning-bg: #2c2615;
+  --danger: #f29a8f;
+  --danger-bg: #2e1c1a;
+  --info: #7fb8f0;
+  --info-bg: #172231;
+
+  /* Viewer 3D */
+  --viewer-bg: #0e0f12;
+  --viewer-grid: #22252b;
+
+  /* Typographie */
+  --font-ui: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-title: 'Space Grotesk Variable', 'Space Grotesk', var(--font-ui);
+
+  /* Rayons */
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-card-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Dimensions */
+  --header-h: 60px;
+  --touch: 44px;
+  --bottom-nav-h: 74px;
+}

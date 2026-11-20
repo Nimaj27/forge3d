@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Forge3D — éditeur</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#121316}
+a{color:#F5A04A}a:hover{color:#FFC27D}
+.bed{background-color:#0E0F12;background-image:linear-gradient(#22252B 1px,transparent 1px),linear-gradient(90deg,#22252B 1px,transparent 1px);background-size:32px 32px}
+input[type=range]{width:100%}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-direction: column; background: #121316; color: #EDEEF0; font-family: Inter, system-ui, sans-serif; font-size: 14px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 12px 20px; border-bottom: 1px solid #2B2E34; background: #17181C">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5l8 4.5v9.5l-8 4.5-8-4.5V7z" stroke="#EDEEF0" stroke-width="1.6" stroke-linejoin="round"></path><path d="M12 11.5l8-4.5M12 11.5v9.5M12 11.5L4 7" stroke="#EDEEF0" stroke-width="1.6" stroke-linejoin="round"></path><path d="M12 2.5l8 4.5-8 4.5L4 7z" fill="{{accent}}"></path></svg>
+<span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -0.01em">Forge3D</span>
+</div>
+<nav aria-label="Navigation principale" style="display: flex; flex-wrap: wrap; gap: 4px; margin-left: 12px">
+<a href="#" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; color: #A3A9B2; text-decoration: none; font-weight: 500">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l8 4.5v9.5l-8 4.5-8-4.5V7z"></path><path d="M12 11.5l8-4.5M12 11.5v9.5M12 11.5L4 7"></path></svg>Modèles</a>
+<a href="#" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; color: #EDEEF0; background: #24272D; text-decoration: none; font-weight: 600">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16z"></path><path d="M14 6l3 3"></path></svg>Éditeur</a>
+<a href="AtelierFormes.dc.html" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; color: #A3A9B2; text-decoration: none; font-weight: 500">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7.6L6 21"></path><path d="M12 7.6l6 13.4"></path><path d="M8 16h8"></path><circle cx="12" cy="5.5" r="2.1"></circle></svg>Atelier</a>
+<a href="IA.dc.html" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; color: #A3A9B2; text-decoration: none; font-weight: 500">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M11 3l1.8 4.7 4.7 1.8-4.7 1.8L11 16l-1.8-4.7L4.5 9.5l4.7-1.8z"></path><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"></path></svg>Créer avec l'IA</a>
+<a href="#" style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; color: #A3A9B2; text-decoration: none; font-weight: 500">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>Mes projets</a>
+</nav>
+<div style="flex: 1 1 20px"></div>
+<label style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid #2B2E34; border-radius: 8px; color: #A3A9B2">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v7H6z"></path></svg>
+<span style="position: absolute; left: -9999px">Imprimante</span>
+<select style="background: transparent; color: #EDEEF0; border: none; font: inherit; font-weight: 500">
+<option>Flashforge Adventurer 5M Pro · 220 × 220 × 220</option>
+<option>Bambu Lab A1 · 256 × 256 × 256</option>
+<option>Autre imprimante…</option>
+</select>
+</label>
+<button type="button" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border: none; border-radius: 8px; background: {{accent}}; color: #1A1206; font: inherit; font-weight: 600; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"></path><path d="M7 10l5 5 5-5"></path><path d="M5 20h14"></path></svg>Exporter les STL</button>
+</header>
+
+<main style="flex: 1 1 auto; display: flex; flex-wrap: wrap; gap: 0">
+
+<aside aria-label="Pièces du projet" style="flex: 1 1 260px; max-width: 320px; padding: 20px; border-right: 1px solid #2B2E34; background: #17181C; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; color: #A3A9B2; text-transform: uppercase; letter-spacing: 0.08em">Projet</span>
+<span style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600">Trophée Normandie</span>
+<span style="font-size: 13px; color: #A3A9B2">2 pièces · 250 mm de haut · v1.1</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 8px; font-weight: 600">
+<span>Bouclier</span><span style="font-size: 12px; color: #A3A9B2; font-weight: 400">176 × 200 × 9,8</span>
+</div>
+<button type="button" style="text-align: left; padding: 9px 8px 9px 22px; border: none; border-radius: 6px; background: transparent; color: #C9CDD3; font: inherit; cursor: pointer">Plaque et bordure</button>
+<button type="button" style="text-align: left; padding: 9px 8px 9px 22px; border: none; border-radius: 6px; background: transparent; color: #C9CDD3; font: inherit; cursor: pointer">Écu de Normandie · 2 léopards</button>
+<button type="button" style="text-align: left; padding: 9px 8px 9px 22px; border: none; border-radius: 6px; background: transparent; color: #C9CDD3; font: inherit; cursor: pointer">Banderole « DÉFIS SPORTIFS »</button>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 8px 10px; font-weight: 600">
+<span>Socle</span><span style="font-size: 12px; color: #A3A9B2; font-weight: 400">170 × 84 × 70</span>
+</div>
+<button type="button" style="text-align: left; padding: 9px 8px 9px 22px; border: none; border-radius: 6px; background: transparent; color: #C9CDD3; font: inherit; cursor: pointer">Plinthe, corps, corniche</button>
+<button type="button" style="text-align: left; padding: 9px 8px 9px 22px; border: none; border-radius: 6px; background: transparent; color: #C9CDD3; font: inherit; cursor: pointer">Texte « PRÉSIDENT DU DÉPARTEMENT… »</button>
+<button type="button" aria-pressed="true" style="text-align: left; padding: 9px 8px 9px 20px; border: 1px solid {{accent}}; border-radius: 6px; background: #2A2219; color: #EDEEF0; font: inherit; font-weight: 500; cursor: pointer">Texte « ALEXANDRE RASSAËRT »</button>
+<button type="button" style="text-align: left; padding: 9px 8px 9px 22px; border: none; border-radius: 6px; background: transparent; color: #C9CDD3; font: inherit; cursor: pointer">Mortaise (emboîtement)</button>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<button type="button" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 1px dashed #3A3E46; border-radius: 8px; background: transparent; color: #EDEEF0; font: inherit; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 6V4h14v2"></path><path d="M12 4v16"></path><path d="M9 20h6"></path></svg>Texte</button>
+<button type="button" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 1px dashed #3A3E46; border-radius: 8px; background: transparent; color: #EDEEF0; font: inherit; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-9 9"></path></svg>Image / logo</button>
+<button type="button" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 1px dashed #3A3E46; border-radius: 8px; background: transparent; color: #EDEEF0; font: inherit; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 13h8v8H3z"></path><circle cx="16" cy="8" r="5"></circle></svg>Forme</button>
+<button type="button" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 1px dashed #3A3E46; border-radius: 8px; background: transparent; color: #EDEEF0; font: inherit; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Pièce</button>
+</div>
+</aside>
+
+<section aria-label="Aperçu 3D" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; padding: 20px; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<div role="group" aria-label="Outils" style="display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: #1B1D21; border: 1px solid #2B2E34">
+<button type="button" aria-label="Orbite" style="width: 44px; height: 40px; border: none; border-radius: 7px; background: #2A2D33; color: #EDEEF0; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"></path><path d="M21 4v5h-5"></path></svg></button>
+<button type="button" aria-label="Mesurer" style="width: 44px; height: 40px; border: none; border-radius: 7px; background: transparent; color: #A3A9B2; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 17L17 3l4 4L7 21z"></path><path d="M7 13l2 2M10 10l2 2M13 7l2 2"></path></svg></button>
+<button type="button" aria-label="Vue en coupe par couche" style="width: 44px; height: 40px; border: none; border-radius: 7px; background: transparent; color: #A3A9B2; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"></path><path d="M3 13l9 5 9-5"></path></svg></button>
+</div>
+<div role="group" aria-label="Vues" style="display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: #1B1D21; border: 1px solid #2B2E34">
+<button type="button" style="min-height: 40px; padding: 0 12px; border: none; border-radius: 7px; background: #2A2D33; color: #EDEEF0; font: inherit; cursor: pointer">3/4</button>
+<button type="button" style="min-height: 40px; padding: 0 12px; border: none; border-radius: 7px; background: transparent; color: #A3A9B2; font: inherit; cursor: pointer">Face</button>
+<button type="button" style="min-height: 40px; padding: 0 12px; border: none; border-radius: 7px; background: transparent; color: #A3A9B2; font: inherit; cursor: pointer">Plateau</button>
+</div>
+<div style="flex: 1 1 10px"></div>
+<span style="display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; background: #1C2A22; color: #8FE0B0; font-size: 13px; font-weight: 500">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Prêt à imprimer</span>
+</div>
+
+<div class="bed" style="position: relative; flex: 1 1 auto; min-height: 560px; border-radius: 14px; border: 1px solid #2B2E34; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<img src="/_blob/28c64ffdccb35dd8536bee86f29336c6" alt="Aperçu 3D du trophée Normandie : bouclier aux deux léopards dorés sur socle gris et or" style="height: 500px; width: auto; max-width: 90%; object-fit: contain">
+<span style="position: absolute; left: 16px; top: 14px; padding: 6px 10px; border-radius: 6px; background: #17181CE6; color: #A3A9B2; font-size: 12px">Plateau 220 × 220 mm</span>
+<span style="position: absolute; right: 16px; top: 14px; padding: 6px 10px; border-radius: 6px; background: #17181CE6; color: #EDEEF0; font-size: 12px; font-weight: 500">Assemblé : 176 × 84 × 250 mm</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; background: #1B1D21; border: 1px solid #2B2E34">
+<span style="font-weight: 600">Couleurs par couche</span>
+<span style="display: flex; align-items: center; gap: 8px; color: #C9CDD3"><span style="width: 14px; height: 14px; border-radius: 4px; background: #9A9DA2"></span>Gris 0 → 7,6 mm</span>
+<span style="display: flex; align-items: center; gap: 8px; color: #C9CDD3"><span style="width: 14px; height: 14px; border-radius: 4px; background: #D6A838"></span>Or à partir de 7,8 mm</span>
+<div style="flex: 1 1 10px"></div>
+<button type="button" style="min-height: 40px; padding: 0 14px; border: 1px solid #3A3E46; border-radius: 8px; background: transparent; color: #EDEEF0; font: inherit; cursor: pointer">Ajouter une pause</button>
+</div>
+</section>
+
+<aside aria-label="Propriétés" style="flex: 1 1 300px; max-width: 360px; padding: 20px; border-left: 1px solid #2B2E34; background: #17181C; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; color: #A3A9B2; text-transform: uppercase; letter-spacing: 0.08em">Propriétés</span>
+<span style="font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600">Texte du socle</span>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="color: #A3A9B2; font-size: 13px">Texte</span>
+<input type="text" value="ALEXANDRE RASSAËRT" style="min-height: 44px; padding: 0 12px; border: 1px solid #3A3E46; border-radius: 8px; background: #121316; color: #EDEEF0; font: inherit">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="color: #A3A9B2; font-size: 13px">Police</span>
+<select style="min-height: 44px; padding: 0 10px; border: 1px solid #3A3E46; border-radius: 8px; background: #121316; color: #EDEEF0; font: inherit">
+<option>Cinzel Black (classique)</option>
+<option>Inter Bold (moderne)</option>
+<option>Bebas Neue (sport)</option>
+</select>
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="display: flex; justify-content: space-between; color: #A3A9B2; font-size: 13px"><span>Hauteur des lettres</span><span style="color: #EDEEF0; font-weight: 500">6,6 mm</span></span>
+<input type="range" min="3" max="20" step="0.1" value="6.6" style="accent-color: {{accent}}">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="display: flex; justify-content: space-between; color: #A3A9B2; font-size: 13px"><span>Relief</span><span style="color: #EDEEF0; font-weight: 500">1,0 mm</span></span>
+<input type="range" min="0.4" max="3" step="0.2" value="1" style="accent-color: {{accent}}">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="color: #A3A9B2; font-size: 13px">Placement</span>
+<select style="min-height: 44px; padding: 0 10px; border: 1px solid #3A3E46; border-radius: 8px; background: #121316; color: #EDEEF0; font: inherit">
+<option>Face avant du socle (inclinée)</option>
+<option>Dessus du socle</option>
+<option>Dos du bouclier</option>
+</select>
+</label>
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 12px; background: #1F2125; border: 1px solid #2B2E34">
+<span style="font-weight: 600">Vérifications avant impression</span>
+<span style="display: flex; gap: 8px; color: #C9CDD3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8FE0B0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Tient sur le plateau (220 mm)</span>
+<span style="display: flex; gap: 8px; color: #C9CDD3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8FE0B0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Maillage étanche, 1 seul bloc</span>
+<span style="display: flex; gap: 8px; color: #C9CDD3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8FE0B0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Aucun support nécessaire</span>
+<span style="display: flex; gap: 8px; color: #C9CDD3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8FE0B0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Tenon / mortaise : jeu 0,25 mm</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto">
+<button type="button" style="min-height: 48px; border: none; border-radius: 8px; background: {{accent}}; color: #1A1206; font: inherit; font-weight: 600; cursor: pointer">Exporter bouclier.stl + socle.stl</button>
+<button type="button" style="min-height: 44px; border: 1px solid #3A3E46; border-radius: 8px; background: transparent; color: #EDEEF0; font: inherit; cursor: pointer">Télécharger le projet (.zip)</button>
+</div>
+</aside>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F59E3D","options":["#F59E3D","#E8C547","#5EA8F5","#5BC88A"]},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#F59E3D' };
+  }
+}
+</script>
+</body>
+</html>
