@@ -1,0 +1,38 @@
+rules_version = '2';
+
+// Règles Firestore de Forge3D.
+// - Chaque utilisateur ne lit et n'écrit que ses propres projets : users/{uid}/projects/*
+// - usage/* (quota de l'IA) est réservé au serveur (Cloud Functions, SDK Admin).
+// - Tout le reste est refusé.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function validProject() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['name', 'scene', 'thumbnail', 'updatedAt'])
+        && d.keys().hasAll(['name', 'scene', 'updatedAt'])
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 120
+        && d.scene is map
+        && (!('thumbnail' in d) || (d.thumbnail is string && d.thumbnail.size() <= 200000))
+        && d.updatedAt == request.time;
+    }
+
+    match /users/{uid}/projects/{projectId} {
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid) && validProject();
+    }
+
+    // Quota de l'IA : jamais accessible depuis le navigateur.
+    match /usage/{document=**} {
+      allow read, write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

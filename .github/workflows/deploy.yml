@@ -1,0 +1,182 @@
+# CI et déploiement de Forge3D sur Firebase.
+#
+# - Pull request : lint, tests, build, puis déploiement sur un canal de prévisualisation Hosting.
+# - Push sur main : la même chose, puis déploiement live (Hosting, règles Firestore, Functions).
+#
+# Secrets GitHub attendus (Settings > Secrets and variables > Actions) :
+#   FIREBASE_SERVICE_ACCOUNT  JSON complet de la clé du compte de service
+#   FIREBASE_PROJECT_ID       identifiant du projet Firebase (ex. forge3d-12345)
+#   ANTHROPIC_API_KEY         clé de l'API Anthropic (copiée dans Secret Manager, jamais dans le navigateur)
+name: CI et déploiement
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FIREBASE_TOOLS_VERSION: '15'
+
+jobs:
+  verify:
+    name: Lint, tests et build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Dépendances
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests unitaires (Vitest)
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Functions (dépendances, build, tests)
+        if: hashFiles('functions/package.json') != ''
+        run: |
+          npm ci --prefix functions
+          npm run build --prefix functions
+          npm test --prefix functions
+
+      - name: Conserver le build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  e2e:
+    name: Tests de bout en bout (Playwright)
+    needs: verify
+    runs-on: ubuntu-latest
+    if: hashFiles('playwright.config.ts') != ''
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Navigateur Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Parcours principaux
+        run: npm run e2e
+
+  preview:
+    name: Prévisualisation (canal Hosting)
+    needs: verify
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Vérifier les secrets
+        id: secrets
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          if [ -n "$SA" ] && [ -n "$PID" ]; then echo "ok=true" >> "$GITHUB_OUTPUT"; else
+            echo "::warning::Secrets Firebase absents : prévisualisation ignorée (voir README)."; echo "ok=false" >> "$GITHUB_OUTPUT"; fi
+      - name: Déployer sur un canal de prévisualisation
+        if: steps.secrets.outputs.ok == 'true'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          expires: 7d
+          firebaseToolsVersion: ${{ env.FIREBASE_TOOLS_VERSION }}
+
+  deploy:
+    name: Déploiement live
+    needs: [verify, e2e]
+    if: always() && needs.verify.result == 'success' && (needs.e2e.result == 'success' || needs.e2e.result == 'skipped') && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://forge3d.web.app
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Identifiants Firebase
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          if [ -z "$SA" ] || [ -z "$PID" ]; then
+            echo "::error::Ajoutez les secrets FIREBASE_SERVICE_ACCOUNT et FIREBASE_PROJECT_ID (voir README)."
+            exit 1
+          fi
+          printf '%s' "$SA" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+          echo "PROJECT_ID=$PID" >> "$GITHUB_ENV"
+
+      - name: Dépendances des Functions
+        if: hashFiles('functions/package.json') != ''
+        run: npm ci --prefix functions
+
+      - name: Synchroniser ANTHROPIC_API_KEY vers Secret Manager
+        if: hashFiles('functions/package.json') != ''
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::warning::Secret ANTHROPIC_API_KEY absent : le mode IA restera « non configuré »."
+            exit 0
+          fi
+          printf '%s' "$ANTHROPIC_API_KEY" | npx --yes "firebase-tools@${FIREBASE_TOOLS_VERSION}" \
+            functions:secrets:set ANTHROPIC_API_KEY --data-file=- --project "$PROJECT_ID" --non-interactive --force
+
+      - name: Déployer (Hosting, Firestore, Functions)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          TARGETS="hosting,firestore"
+          if [ -f functions/package.json ] && [ -n "$ANTHROPIC_API_KEY" ]; then TARGETS="$TARGETS,functions"; fi
+          echo "Cibles : $TARGETS"
+          npx --yes "firebase-tools@${FIREBASE_TOOLS_VERSION}" deploy --only "$TARGETS" \
+            --project "$PROJECT_ID" --non-interactive --force
+
+      - name: Nettoyage
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
