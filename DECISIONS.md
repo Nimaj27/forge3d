@@ -157,3 +157,19 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
 - **Non testé de bout en bout ici** : sans clé ni projet Firebase dans l'environnement de
   développement, l'appel réel à Claude n'a pas pu être exécuté ; la chaîne est couverte par des
   tests avec un client simulé (réponse valide, correction après erreur, refus, image, bornage).
+
+## 2026-11-20 — J6
+
+- **Scène stockée en texte JSON dans Firestore** (et non en map) : Firestore refuse les tableaux
+  directement imbriqués et indexerait inutilement chaque champ ; un projet est limité à ~900 Ko
+  (au-delà, typiquement à cause d'images, l'export `.forge3d.json` reste possible).
+- **Autosauvegarde** : un seul emplacement (« travail en cours ») dans IndexedDB ; un modèle
+  demandé dans l'URL est prioritaire sur la restauration.
+- **Projet en ligne courant** mémorisé (localStorage) pour « Enregistrer » par-dessus ; ouvrir un
+  modèle ou importer un fichier repart d'un nouveau projet.
+- **PWA** : `vite-plugin-pwa` en mode `generateSW`, précache complet (≈ 3,7 Mo dont 0,5 Mo de
+  WASM), mise à jour automatique ; les URL réservées `/__/` (configuration Firebase) ne sont pas
+  servies par le service worker. Vérifié dans Chromium : rechargement hors ligne, calcul et
+  export STL fonctionnent. L'installation sur un vrai téléphone Android / iOS reste à confirmer
+  après le déploiement (critères d'installation remplis : manifeste, icônes 192/512 et
+  « maskable », service worker).

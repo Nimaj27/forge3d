@@ -16,7 +16,7 @@ service cloud.firestore {
       return d.keys().hasOnly(['name', 'scene', 'thumbnail', 'updatedAt'])
         && d.keys().hasAll(['name', 'scene', 'updatedAt'])
         && d.name is string && d.name.size() > 0 && d.name.size() <= 120
-        && d.scene is map
+        && d.scene is string && d.scene.size() <= 900000
         && (!('thumbnail' in d) || (d.thumbnail is string && d.thumbnail.size() <= 200000))
         && d.updatedAt == request.time;
     }

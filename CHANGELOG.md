@@ -7,6 +7,23 @@ et le projet respecte le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Non publié]
 
+## [0.7.0] — 2026-11-20
+
+### Ajouté
+
+- « Mes projets » : connexion Google, projets enregistrés en ligne (Firestore,
+  `users/{uid}/projects`, miniature de l'aperçu), ouverture, mise à jour, suppression.
+- Autosauvegarde du travail sur l'appareil (IndexedDB), restaurée au démarrage et enregistrée
+  à chaque modification (et au passage en arrière-plan sur téléphone).
+- Import et export de fichiers `.forge3d.json` (validés à l'import, message clair sinon).
+- Application installable (PWA) : manifeste, icônes, service worker qui met en cache
+  l'application, le moteur WASM, le worker et les polices : tout fonctionne hors ligne, sauf
+  le mode IA et la sauvegarde en ligne.
+
+### Modifié
+
+- Règles Firestore : la scène d'un projet est enregistrée en JSON (texte ≤ 900 Ko).
+
 ## [0.6.0] — 2026-11-20
 
 ### Ajouté

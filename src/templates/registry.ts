@@ -4,6 +4,7 @@
 import type { Scene } from '../../shared/scene';
 import type { ExtraCheck } from '../components/ChecksPanel';
 import { resolvePrinter } from '../lib/printers';
+import { useCurrentProject } from '../projects/projects';
 import { useSceneStore } from '../store/sceneStore';
 import { useSettings } from '../store/settingsStore';
 import { boite } from './boite';
@@ -61,7 +62,8 @@ function currentPrinter(): Printer {
 export async function loadTemplate(id: string): Promise<boolean> {
   const def = getTemplate(id);
   if (!def) return false;
-  useSceneStore.getState().setScene(def.build(def.defaults, currentPrinter()));
+  useSceneStore.getState().setScene(def.build(def.defaults, currentPrinter()), { keepHistory: true });
+  useCurrentProject.getState().setId(null);
   return true;
 }
 

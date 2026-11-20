@@ -3,11 +3,12 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import { AppHeader } from './components/AppHeader';
 import { BottomNav } from './components/BottomNav';
 import { ModelesPage } from './pages/ModelesPage';
-import { PlaceholderPage } from './pages/PlaceholderPage';
 import { EditeurPage } from './pages/EditeurPage';
 import { AtelierPage } from './pages/AtelierPage';
 import { CroquisPage } from './pages/CroquisPage';
 import { IAPage } from './pages/IAPage';
+import { ProjetsPage } from './pages/ProjetsPage';
+import { useAutosave } from './projects/projects';
 import { ToastZone } from './components/Toast';
 import { useSettings } from './store/settingsStore';
 
@@ -47,6 +48,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
 
 export function App() {
   useAccent();
+  useAutosave();
   return (
     <BrowserRouter>
       <div className="app">
@@ -60,16 +62,7 @@ export function App() {
             <Route path="/atelier" element={<AtelierPage />} />
             <Route path="/atelier/croquis" element={<CroquisPage />} />
             <Route path="/ia" element={<IAPage />} />
-            <Route
-              path="/projets"
-              element={
-                <PlaceholderPage
-                  title="Mes projets"
-                  icon="folder"
-                  text="La sauvegarde de tes projets (compte Google et appareil) arrive bientôt."
-                />
-              }
-            />
+            <Route path="/projets" element={<ProjetsPage />} />
             <Route path="*" element={<Navigate to="/modeles" replace />} />
           </Routes>
           </ErrorBoundary>

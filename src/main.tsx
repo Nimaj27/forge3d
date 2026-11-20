@@ -7,6 +7,7 @@ import './styles/base.css';
 import './styles/ui.css';
 import './styles/layout.css';
 import './styles/editor.css';
+import { registerSW } from 'virtual:pwa-register';
 import { App } from './App';
 
 const root = document.getElementById('root');
@@ -17,3 +18,6 @@ createRoot(root).render(
     <App />
   </StrictMode>,
 );
+
+// Service worker : application installable et utilisable hors ligne (sauf le mode IA)
+if ('serviceWorker' in navigator && import.meta.env.PROD) registerSW({ immediate: true });
