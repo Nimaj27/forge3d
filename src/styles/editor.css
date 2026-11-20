@@ -506,3 +506,115 @@
 .m-atelier__props > .pill {
   align-self: flex-start;
 }
+
+/* ---------- Croquis 2D ---------- */
+.workspace--sketch {
+  grid-template-columns: minmax(230px, 260px) minmax(0, 1fr) minmax(300px, 340px);
+}
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.tool-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--touch);
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface-3);
+  color: var(--text);
+  font-size: 13px;
+  text-align: left;
+}
+.tool-btn:hover:not(:disabled) {
+  border-color: var(--border-strong);
+}
+.tool-btn[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft-bg);
+}
+.tool-btn--wide {
+  width: 100%;
+}
+.shell-row {
+  display: grid;
+  grid-template-columns: 1fr 96px;
+  gap: 8px;
+  align-items: end;
+}
+.tool-import {
+  margin-top: auto;
+}
+.precision {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+.sketch-paper {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 560px;
+  border-radius: var(--radius-card-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.sketch-canvas {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+  user-select: none;
+}
+.sketch-canvas svg {
+  display: block;
+  outline: none;
+}
+.sketch-canvas svg:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.sketch-name {
+  width: auto;
+  max-width: 320px;
+}
+.sketch-grid-label,
+.sketch-help {
+  color: var(--text-3);
+  font-size: 13px;
+}
+.sketch-preview {
+  position: relative;
+  height: 230px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--viewer-bg);
+}
+.m-croquis__canvas {
+  position: relative;
+  height: 50vh;
+  min-height: 300px;
+  background: #101114;
+}
+.m-croquis__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+}
+.m-croquis__panel .input,
+.m-croquis__panel .select {
+  font-size: 16px;
+}
+.shape-btn[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft-bg);
+}

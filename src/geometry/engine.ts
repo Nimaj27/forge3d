@@ -3,7 +3,8 @@
  * utilisé par le Web Worker du navigateur et par les tests Node.
  */
 import type { Manifold, ManifoldToplevel } from 'manifold-3d';
-import type { Part, SceneObject, Vec3 } from '../../shared/scene';
+import type { Loop, Part, SceneObject, Vec3 } from '../../shared/scene';
+import { shellLoops } from './sketchOps';
 import { checkBed, checkFlat, checkManifold, checkOverhang, checkThin, findThinZ, measureOverhangs } from './analysis';
 import { Arena, hashValue, LruCache } from './cache';
 import { toTriangleSoup, validateTriangleSoup } from './meshCheck';
@@ -30,6 +31,8 @@ export interface Engine {
   evaluateObject(obj: SceneObject): Promise<ObjectEvaluation>;
   analyzePart(part: Part, bed: Vec3): Promise<PartReport>;
   exportPart(part: Part, fileName: string): Promise<ExportedFile>;
+  /** Creuse un croquis en paroi d'épaisseur constante */
+  shellSketch(loops: Loop[], thickness: number, mode: 'revolve' | 'extrude'): Loop[];
   clear(): void;
 }
 
@@ -238,6 +241,10 @@ export function createEngine(wasm: ManifoldToplevel, builders: PrimitiveBuilders
       const soup = toTriangleSoup(raw.vertProperties, raw.triVerts, raw.numProp);
       const validation = validateTriangleSoup(soup);
       return { partId: part.id, fileName, data: writeBinaryStl(soup), validation };
+    },
+
+    shellSketch(loops, thickness, mode) {
+      return shellLoops(wasm, loops, thickness, mode);
     },
 
     clear() {

@@ -85,3 +85,28 @@ Format : date — décision — raison. Les écarts au brief ou aux maquettes so
 - **Test d'acceptation** : la reconstruction du support de téléphone de la maquette (socle,
   dossier incliné à −22°, rebord, passe-câble en trou) demande 58 saisies / clics, soit environ
   1 min 30 pour un humain ; résultat vérifié étanche, 1 bloc, sans support.
+
+## 2026-11-20 — J3
+
+- **Polices sans chevauchements** : Cinzel, Inter et Roboto Slab sont des polices variables dont
+  les glyphes contiennent des contours superposés ; avec le remplissage EvenOdd imposé par le
+  brief, ils devenaient des trous. `scripts/build_fonts.py` fusionne désormais les contours
+  (fontTools + skia-pathops) ; un test vérifie qu'EvenOdd et NonZero donnent la même aire.
+- **Hauteur des lettres** = hauteur réelle du glyphe « H » (l'en-tête OS/2 de Cinzel annonce 700
+  alors que certains empattements montent à 718).
+- **Épaississement** : `offset(+thicken + 0,015)` puis `offset(−0,015)` (jointures en onglet) :
+  épaissit de 0,06 mm et sépare les contours qui se touchent en un point.
+- **[écart] SVG sans DOMParser** : le brief cite DOMParser, absent des Web Workers ; un analyseur
+  SVG minimal (balises, attributs, styles, transformations, toutes les commandes de chemin) est
+  partagé par le worker (objets `svg`) et l'import du croquis.
+- **Croquis éditable** : formes paramétriques (cercle, rectangle, polygone) et chemins à segments
+  typés (ligne, arc par bulge, courbe lissée Catmull-Rom, Bézier explicite) ; conversion en
+  `loops` de la Scène à l'ajout, et retour pour la modification.
+- **Creuser (paroi)** : en révolution, silhouette + miroir, bande au-dessus de l'ouverture,
+  `offset(−e)`, soustraction, puis découpe à x ≥ 0 ; les éclats < 0,6 mm sont retirés
+  (`offset(−0,3)` / `offset(+0,3)`). C'est l'outil qui rend le vase de la maquette rapide.
+- **Gestes du croquis** : un glisser (> 4 px) déplace la vue, un toucher pose un point ;
+  deux doigts zooment ; la molette zoome autour du curseur.
+- **Test d'acceptation J3** : le vase (Ø 64 × 100, paroi 2,5 mm) est vérifié par un test Vitest
+  (dimensions, étanchéité, 1 bloc, sans support) et par un parcours Playwright dans l'interface
+  (« Résultat : Ø 64 × 100 mm, sans support », ajout à la scène, export).

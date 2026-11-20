@@ -6,6 +6,7 @@ import { ModelesPage } from './pages/ModelesPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { EditeurPage } from './pages/EditeurPage';
 import { AtelierPage } from './pages/AtelierPage';
+import { CroquisPage } from './pages/CroquisPage';
 import { ToastZone } from './components/Toast';
 import { useSettings } from './store/settingsStore';
 
@@ -15,10 +16,6 @@ function useAccent() {
   useEffect(() => {
     document.documentElement.style.setProperty('--accent', accent);
   }, [accent]);
-}
-
-function CroquisPlaceholder() {
-  return <PlaceholderPage title="Croquis 2D" icon="sketch" text="Le dessin 2D (lignes, arcs, cotes, extrusion, révolution) arrive au prochain jalon." />;
 }
 
 /** Barrière d'erreur : un écran qui plante n'emporte pas toute l'application. */
@@ -60,7 +57,7 @@ export function App() {
             <Route path="/modeles" element={<ModelesPage />} />
             <Route path="/editeur" element={<EditeurPage />} />
             <Route path="/atelier" element={<AtelierPage />} />
-            <Route path="/atelier/croquis" element={<CroquisPlaceholder />} />
+            <Route path="/atelier/croquis" element={<CroquisPage />} />
             <Route
               path="/ia"
               element={

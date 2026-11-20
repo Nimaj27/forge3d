@@ -6,7 +6,7 @@
 import * as Comlink from 'comlink';
 import Module from 'manifold-3d';
 import wasmUrl from 'manifold-3d/manifold.wasm?url';
-import type { Part, SceneObject, Vec3 } from '../../shared/scene';
+import type { Loop, Part, SceneObject, Vec3 } from '../../shared/scene';
 import { createBuilders } from './builders';
 import { createEngine } from './engine';
 import type { MeshData } from './types';
@@ -53,6 +53,9 @@ const api = {
     const engine = await enginePromise;
     const r = await engine.exportPart(part, fileName);
     return Comlink.transfer(r, [r.data]);
+  },
+  async shellSketch(loops: Loop[], thickness: number, mode: 'revolve' | 'extrude') {
+    return (await enginePromise).shellSketch(loops, thickness, mode);
   },
   async clear() {
     (await enginePromise).clear();

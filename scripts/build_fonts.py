@@ -2,12 +2,14 @@
 """Génère les polices TTF statiques de Forge3D dans public/fonts.
 
 Usage (rarement nécessaire, les TTF sont déjà versionnées) :
-    pip install fonttools
+    pip install fonttools skia-pathops
     python3 -I scripts/build_fonts.py
 
 Sources : dépôt github.com/google/fonts (licences OFL / Apache 2.0).
 Les polices variables sont figées au bon poids, puis réduites au latin
 (ASCII, Latin-1, Latin étendu A, ponctuation typographique).
+Les contours qui se chevauchent sont fusionnés (indispensable pour le remplissage
+EvenOdd du moteur 3D : sans cela, les chevauchements deviendraient des trous).
 """
 import io
 import pathlib
@@ -16,6 +18,7 @@ import urllib.request
 from fontTools.ttLib import TTFont
 from fontTools.varLib import instancer
 from fontTools import subset
+from fontTools.ttLib.removeOverlaps import removeOverlaps
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "public" / "fonts"
@@ -60,6 +63,7 @@ def main() -> None:
         sub = subset.Subsetter(options=opts)
         sub.populate(unicodes=subset.parse_unicodes(UNICODES))
         sub.subset(font)
+        removeOverlaps(font)
         font.save(OUT / name)
         print(f"{name}: {(OUT / name).stat().st_size} octets")
     for name, src in LICENSES:

@@ -2,6 +2,7 @@
  * Panneau de propriétés d'un objet de scène (éditeur et atelier).
  */
 import { useId } from 'react';
+import { Link } from 'react-router';
 import { FONT_IDS, FONT_INFO, KIND_LABELS, type SceneObject, type Vec3 } from '../../shared/scene';
 import { degrees, formatNumber, mm } from '../lib/format';
 import { useSceneStore } from '../store/sceneStore';
@@ -265,6 +266,10 @@ function KindFields({ object, set }: { object: SceneObject; set: (patch: Record<
             </>
           )}
           <p className="props__hint">{p.loops.length} contour(s) fermé(s).</p>
+          <Link className="btn btn--sm" to={`/atelier/croquis?objet=${object.id}`}>
+            <Icon name="sketch" size={16} />
+            Modifier le croquis
+          </Link>
         </>
       );
     }

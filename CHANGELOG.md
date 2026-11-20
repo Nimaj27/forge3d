@@ -7,6 +7,33 @@ et le projet respecte le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Non publié]
 
+## [0.4.0] — 2026-11-20
+
+### Ajouté
+
+- Texte 3D (opentype.js) avec les 4 polices embarquées (Cinzel Black, Inter Bold, Bebas Neue,
+  Roboto Slab Bold) : plusieurs lignes, alignement, crénage, espacement des lettres, hauteur des
+  capitales mesurée sur le « H », épaississement de 0,06 mm, séparation des pincements.
+- Texte sur un arc (déformation polaire, arc bombé ou creusé).
+- Dessins SVG en relief (analyse SVG autonome, utilisable dans le worker : chemins, arcs,
+  rectangles arrondis, cercles, ellipses, polygones, groupes et transformations).
+- Atelier « Croquis 2D » : ligne, courbe (Bézier lissée), arc, cercle, rectangle arrondi,
+  polygone ; poignées pour déplacer les points et courber les segments ; aimantation grille
+  1 mm, points et axe ; zoom molette et pincer.
+- Cotes en mm exacts : longueur et angle du segment suivant, coordonnées des points, diamètre,
+  largeur × hauteur, rayon et côtés ; affichage des cotes (hauteur, largeur ou Ø en révolution).
+- Symétrie (un demi-profil appuyé sur l'axe devient une forme symétrique unique), « Creuser
+  (paroi) » : silhouette → paroi de vase d'épaisseur constante (fond + ouverture), ou anneau.
+- Import SVG / DXF (lignes, arcs, polylignes avec arrondis, cercles, ellipses, splines ;
+  contours chaînés automatiquement ; unités du DXF respectées).
+- Transformation en 3D : extrusion (hauteur) ou révolution (angle, lissage), aperçu 3D,
+  « Ajouter à la scène », « Exporter seul en STL », modification d'un croquis existant.
+
+### Corrigé
+
+- Polices : les contours qui se chevauchaient (polices variables) sont fusionnés ; sans cela,
+  le remplissage EvenOdd perçait la plupart des lettres.
+
 ## [0.3.0] — 2026-11-20
 
 ### Ajouté
