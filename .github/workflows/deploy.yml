@@ -67,7 +67,6 @@ jobs:
     name: Tests de bout en bout (Playwright)
     needs: verify
     runs-on: ubuntu-latest
-    if: hashFiles('playwright.config.ts') != ''
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -151,7 +150,7 @@ jobs:
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
           echo "PROJECT_ID=$PID" >> "$GITHUB_ENV"
 
-      - name: Dépendances (racine : schéma de Scène partagé, puis Functions)
+      - name: 'Dépendances (racine : schéma de Scène partagé, puis Functions)'
         if: hashFiles('functions/package.json') != ''
         run: |
           npm ci

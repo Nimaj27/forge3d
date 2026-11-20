@@ -29,6 +29,8 @@ Première version complète de Forge3D (jalons J0 à J7).
 ### Corrigé
 
 - Bandes de boutons défilantes du téléphone accessibles au clavier.
+- Workflow CI refusé par GitHub, aucune exécution ne démarrait : `hashFiles` interdit dans la
+  condition d'un job (tests de bout en bout) et nom d'étape contenant « : » non entre guillemets.
 
 ## [0.7.0] — 2026-11-20
 
