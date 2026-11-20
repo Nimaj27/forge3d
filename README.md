@@ -15,6 +15,8 @@ directement dans le navigateur : https://forge3d.web.app
 
 Toutes les mesures sont en millimètres. L'interface est en français.
 
+📘 **Mode d'emploi complet : [MODE_EMPLOI.md](MODE_EMPLOI.md)** (mis à jour à chaque version).
+
 ---
 
 ## Mise en ligne sans rien installer
@@ -75,6 +77,7 @@ Dans le dépôt GitHub : **Settings › Secrets and variables › Actions › Ne
 | `FIREBASE_SERVICE_ACCOUNT` | tout le contenu du fichier JSON de l'étape 4 |
 | `FIREBASE_PROJECT_ID` | l'ID du projet Firebase (étape 1) |
 | `ANTHROPIC_API_KEY` | **facultatif**, seulement avec le forfait Blaze : votre clé API Anthropic |
+| `AI_ALLOWED_EMAILS` | avec l'IA : adresse(s) Google autorisée(s) à l'utiliser, séparées par des virgules |
 
 Sans `ANTHROPIC_API_KEY`, la CI ne déploie que le site et les règles Firestore (compatible
 Spark) ; l'application fonctionne normalement et affiche « Mode IA non configuré ».
@@ -111,7 +114,12 @@ Le déploiement live se fait à chaque mise à jour de la branche **`main`**.
    - Éditeur Cloud Build (`roles/cloudbuild.builds.editor`)
    - Administrateur Secret Manager (`roles/secretmanager.admin`)
 3. Ajoutez le secret GitHub `ANTHROPIC_API_KEY` (clé créée sur https://console.anthropic.com).
-4. Relancez le déploiement : **Actions › CI et déploiement › Run workflow** sur `main`.
+4. Ajoutez le secret GitHub `AI_ALLOWED_EMAILS` avec **votre adresse Google** (plusieurs adresses :
+   séparées par des virgules). L'IA utilise votre clé : elle est **réservée à ces adresses**. Les autres
+   visiteurs utilisent librement tout le reste de l'application et voient « IA réservée ». Sans ce
+   secret, l'IA est refusée à tout le monde. Pour ajouter ou retirer quelqu'un : modifiez le secret,
+   puis relancez le déploiement.
+5. Relancez le déploiement : **Actions › CI et déploiement › Run workflow** sur `main`.
 
 ---
 
@@ -162,6 +170,9 @@ npm run build
 ```bash
 npm run e2e
 ```
+
+`npm run guide` régénère le mode d'emploi après une modification de `docs/mode-emploi/`, d'un
+modèle, d'un réglage ou d'un raccourci.
 
 Voir `CLAUDE.md` pour l'architecture et les conventions, `DECISIONS.md` pour les choix techniques
 et `CHANGELOG.md` pour l'historique des versions.

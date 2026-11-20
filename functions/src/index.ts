@@ -7,6 +7,7 @@ import { initializeApp } from 'firebase-admin/app';
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { defineSecret } from 'firebase-functions/params';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { AI_RESERVED_MESSAGE, isAiAllowed, parseAllowedEmails } from './access';
 import { DEFAULT_MODEL, GenerationError, generateScene, inputSchema } from './generate';
 
 initializeApp();
@@ -51,6 +52,12 @@ export const generateScene_ = onCall(
   },
   async (request) => {
     if (!request.auth) throw new HttpsError('unauthenticated', 'Connectez-vous avec Google pour utiliser l’IA.');
+    // la clé Anthropic est celle du propriétaire : seules les adresses autorisées utilisent l'IA
+    if (!isAiAllowed(request.auth.token, parseAllowedEmails(process.env.AI_ALLOWED_EMAILS))) {
+      throw new HttpsError('permission-denied', AI_RESERVED_MESSAGE, { reason: 'ai-reserved' });
+    }
+    // vérification d'accès depuis la page IA : aucun appel à Claude, aucun quota consommé
+    if ((request.data as { check?: unknown } | null)?.check === true) return { allowed: true };
     const key = ANTHROPIC_API_KEY.value();
     if (!key) throw new HttpsError('failed-precondition', 'Mode IA non configuré.');
     const parsed = inputSchema.safeParse(request.data);

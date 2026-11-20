@@ -12,12 +12,18 @@ describe('performances de la géométrie', () => {
     // préchauffage : chargement des polices et du WASM, hors mesure
     await engine.evaluatePart(buildTemplate('porte-cles', {}, BED).parts[0]);
     const timings: Record<string, number> = {};
+    // Meilleur de 3 calculs complets (cache vidé à chaque fois) : les autres fichiers de tests tournent
+    // en parallèle sur la même machine, le minimum mesure le coût du calcul et non leur encombrement.
     for (const id of Object.keys(TEMPLATES)) {
-      engine.clear();
       const scene = buildTemplate(id, {}, BED);
-      const t0 = performance.now();
-      for (const part of scene.parts) await engine.evaluatePart(part);
-      timings[id] = Math.round(performance.now() - t0);
+      let best = Infinity;
+      for (let run = 0; run < 3; run++) {
+        engine.clear();
+        const t0 = performance.now();
+        for (const part of scene.parts) await engine.evaluatePart(part);
+        best = Math.min(best, performance.now() - t0);
+      }
+      timings[id] = Math.round(best);
     }
     console.info('Temps de calcul (ms) :', timings);
     for (const [id, ms] of Object.entries(timings)) {

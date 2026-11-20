@@ -43,8 +43,14 @@ export function IAPage() {
   const [image, setImage] = useState<PendingImage>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
-  const notConfigured = !available || messages.some((m) => m.error && m.text === 'Mode IA non configuré.');
-  const status = notConfigured ? 'off' : user ? 'on' : user === null ? 'signedOut' : 'loading';
+  const access = useAiStore((s) => s.access);
+  const notConfigured = !available || access === 'off' || messages.some((m) => m.error && m.text === 'Mode IA non configuré.');
+  const status = notConfigured ? 'off' : user ? (access === 'reserved' ? 'reserved' : 'on') : user === null ? 'signedOut' : 'loading';
+
+  // l'IA utilise la clé du propriétaire du site : on vérifie dès la connexion si ce compte y a accès
+  useEffect(() => {
+    if (user && available) void useAiStore.getState().checkAccess(user.uid);
+  }, [user, available]);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' });
@@ -86,6 +92,13 @@ export function IAPage() {
         <Icon name="info" />
         <span>
           <strong>Mode IA non configuré.</strong> Le reste de l’application fonctionne normalement : partez d’un modèle ou de l’atelier.
+        </span>
+      </div>
+    ) : status === 'reserved' ? (
+      <div className="notice notice--info" role="status">
+        <Icon name="info" />
+        <span>
+          <strong>IA réservée.</strong> L’IA de ce site est réservée à son propriétaire. Le reste de l’application est libre d’accès : partez d’un modèle ou de l’atelier.
         </span>
       </div>
     ) : status === 'signedOut' ? (

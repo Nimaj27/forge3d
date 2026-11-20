@@ -1,7 +1,7 @@
 {
   "name": "forge3d",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Forge3D — créer des fichiers STL imprimables en 3D, sur ordinateur et téléphone.",
   "type": "module",
   "engines": {
@@ -15,6 +15,7 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
+    "guide": "vitest run src/guide --update",
     "e2e": "playwright test --trace off",
     "icons": "node scripts/generate-icons.mjs"
   },

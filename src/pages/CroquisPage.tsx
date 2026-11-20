@@ -7,7 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { sceneObjectSchema, type Scene, type SceneObject, type Vec2 } from '../../shared/scene';
 import { AtelierModeSwitch } from '../components/AtelierModeSwitch';
 import { NumberField, Segmented, SliderField } from '../components/fields';
-import { Icon, type IconName } from '../components/Icon';
+import { Icon } from '../components/Icon';
 import { toast } from '../components/Toast';
 import { useSceneView } from '../editor/useSceneView';
 import { geometry } from '../geometry/client';
@@ -20,18 +20,10 @@ import { importSketchFile } from '../sketch/importFile';
 import { describeShapes, loopToShape, shapeToLoop, symmetrize, type PathSeg, type SketchShape } from '../sketch/model';
 import { SketchCanvas, type DraftInfo, type SketchCanvasHandle } from '../sketch/SketchCanvas';
 import { useSketchHistory, useSketchStore, type SketchTool } from '../sketch/sketchStore';
+import { DRAW_TOOLS } from '../sketch/tools';
 import { useSceneStore } from '../store/sceneStore';
 import { usePrinter } from '../store/settingsStore';
 import { Viewer3D } from '../viewer/Viewer3D';
-
-const DRAW_TOOLS: { value: SketchTool; label: string; icon: IconName }[] = [
-  { value: 'line', label: 'Ligne', icon: 'line' },
-  { value: 'curve', label: 'Courbe', icon: 'curve' },
-  { value: 'arc', label: 'Arc', icon: 'arc' },
-  { value: 'circle', label: 'Cercle', icon: 'circle' },
-  { value: 'rect', label: 'Rectangle', icon: 'rect' },
-  { value: 'polygon', label: 'Polygone', icon: 'polygon' },
-];
 
 const SMOOTHING = [
   { value: 96, label: 'Élevé (96 segments)' },
